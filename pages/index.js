@@ -1,5 +1,12 @@
 const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
 
+// Utility to fetch a block by collection and item ID
+async function fetchBlockContent(collection, itemId) {
+  const res = await fetch(`${DIRECTUS_URL}/items/${collection}?filter[id][_eq]=${itemId}`);
+  const json = await res.json();
+  return json?.data?.[0] || null;
+}
+
 export async function getStaticProps() {
   // 1. Fetch Home page
   const res = await fetch(`${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`);
@@ -10,20 +17,33 @@ export async function getStaticProps() {
     return { props: { page: null, blocks: [] }, revalidate: 60 };
   }
 
-  // 2. Fetch blocks from the correct collection
+  // 2. Fetch page_blocks linking table
   const blockIds = Array.isArray(page.blocks) ? page.blocks : [];
-
-  let blocks = [];
+  let pageBlocks = [];
   if (blockIds.length > 0) {
     const blocksRes = await fetch(
       `${DIRECTUS_URL}/items/page_blocks?filter[id][_in]=${blockIds.join(",")}`
     );
     const blocksJson = await blocksRes.json();
-    blocks = blocksJson?.data || [];
+    pageBlocks = blocksJson?.data || [];
   }
 
-  // DEBUG: log blocks to see exact field names
-  console.log("Fetched blocks:", blocks);
+  // 3. Fetch full content for each block
+  const blocks = [];
+  for (const pb of pageBlocks) {
+    if (pb.hide_block) continue; // skip hidden blocks
+    const blockContent = await fetchBlockContent(pb.collection, pb.item);
+    if (blockContent) {
+      blocks.push({
+        ...blockContent,
+        collection: pb.collection, // keep track of block type
+        sort: pb.sort,
+      });
+    }
+  }
+
+  // Sort blocks by sort field
+  blocks.sort((a, b) => a.sort - b.sort);
 
   return {
     props: { page, blocks },
@@ -49,21 +69,10 @@ export default function Home({ page, blocks }) {
             padding: 20,
           }}
         >
-          {/* DEBUG: show full block data */}
-          <pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>
-            {JSON.stringify(block, null, 2)}
-          </pre>
-
-          {/* Title */}
+          {/* Dynamic rendering based on available fields */}
           {block.Title && <h2>{block.Title}</h2>}
-
-          {/* Headline */}
           {block.Headline && <h3>{block.Headline}</h3>}
-
-          {/* Content */}
           {block.Content && <p>{block.Content}</p>}
-
-          {/* Image */}
           {block.Image && (
             <img
               src={block.Image}
@@ -77,8 +86,6 @@ export default function Home({ page, blocks }) {
               }}
             />
           )}
-
-          {/* Button Group */}
           {block.ButtonGroup && Array.isArray(block.ButtonGroup) && (
             <div style={{ marginTop: 10 }}>
               {block.ButtonGroup.map((btn, index) => (
@@ -100,6 +107,11 @@ export default function Home({ page, blocks }) {
               ))}
             </div>
           )}
+
+          {/* DEBUG: show collection name */}
+          <small style={{ display: "block", marginTop: 10, color: "#888" }}>
+            Block type: {block.collection}
+          </small>
         </div>
       ))}
     </main>
