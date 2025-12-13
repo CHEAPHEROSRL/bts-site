@@ -1,58 +1,59 @@
+const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+
 export async function getStaticProps() {
-  // Fetch the Home page
+  // 1. Fetch Home page
   const res = await fetch(
-    "https://bts-agencyos-003-u62227.vm.elestio.app/items/pages?filter[title][_eq]=Home"
+    `${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`
   );
   const json = await res.json();
-  const page = json.data[0];
+
+  const page = json?.data?.[0] || null;
 
   if (!page) {
-    return { props: { page: null, blocks: [] } };
+    return { props: { page: null, blocks: [] }, revalidate: 60 };
   }
 
-  // Fetch full block data
-  const blockIds = page.blocks || [];
-  let blocks = [];
+  // 2. Fetch blocks
+  const blockIds = Array.isArray(page.blocks)
+    ? page.blocks.map((b) => (b.id ? b.id : b)) // handles IDs or object array
+    : [];
 
+  let blocks = [];
   if (blockIds.length > 0) {
     const blocksRes = await fetch(
-      `https://bts-agencyos-003-u62227.vm.elestio.app/items/blocks?filter[id][_in]=${blockIds.join(",")}`
+      `${DIRECTUS_URL}/items/blocks?filter[id][_in]=${blockIds.join(",")}`
     );
     const blocksJson = await blocksRes.json();
-    blocks = blocksJson.data || [];
+    blocks = blocksJson?.data || [];
   }
 
-  return { props: { page, blocks } };
+  return {
+    props: { page, blocks },
+    revalidate: 60, // ISR interval in seconds
+  };
 }
 
 export default function Home({ page, blocks }) {
   if (!page) return <p>No page data found.</p>;
 
   return (
-    <main style={{ padding: 40, fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ fontSize: 36, marginBottom: 20 }}>{page.title}</h1>
+    <main style={{ fontFamily: "Arial, sans-serif", color: "#222", padding: 40 }}>
+      <h1>{page.title}</h1>
+
+      {blocks.length === 0 && <p>No blocks found</p>}
 
       {blocks.map((block) => (
-        <section
+        <div
           key={block.id}
           style={{
-            marginBottom: 30,
+            border: "1px solid red",
+            marginBottom: 20,
             padding: 20,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
           }}
         >
-          {block.title && <h2 style={{ fontSize: 24 }}>{block.title}</h2>}
-          {block.content && <p style={{ fontSize: 16 }}>{block.content}</p>}
-          {block.image && (
-            <img
-              src={block.image}
-              alt={block.title || "Block image"}
-              style={{ maxWidth: "100%", marginTop: 10, borderRadius: 6 }}
-            />
-          )}
-        </section>
+          {block.title && <h2>{block.title}</h2>}
+          {block.content && <p>{block.content}</p>}
+        </div>
       ))}
     </main>
   );
