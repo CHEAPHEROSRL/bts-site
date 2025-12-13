@@ -59,10 +59,41 @@ export async function getStaticProps() {
 export default function Home({ page, blocks, missingConfig }) {
   if (missingConfig) {
     return (
-      <main style={{ fontFamily: "Arial, sans-serif", color: "#222", padding: 40 }}>
-        <h1>Configuration Required</h1>
-        <p>This site requires a Directus CMS connection to function.</p>
-        <p>Please set the <code>NEXT_PUBLIC_DIRECTUS_URL</code> environment variable to your Directus instance URL.</p>
+      <main style={{ 
+        fontFamily: "Arial, sans-serif", 
+        color: "#fff", 
+        padding: 60,
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <div style={{ 
+          background: "rgba(0, 0, 0, 0.3)", 
+          padding: 40, 
+          borderRadius: 10,
+          maxWidth: 500,
+          textAlign: "center"
+        }}>
+          <h1 style={{ fontSize: 32, marginBottom: 20 }}>⚙️ Setup Required</h1>
+          <p style={{ fontSize: 16, lineHeight: 1.6, marginBottom: 15 }}>
+            This site needs a Directus CMS connection to work.
+          </p>
+          <div style={{ 
+            background: "rgba(255, 255, 255, 0.15)", 
+            padding: 15, 
+            borderRadius: 6,
+            marginBottom: 20,
+            fontFamily: "monospace",
+            fontSize: 14
+          }}>
+            <code>NEXT_PUBLIC_DIRECTUS_URL</code>
+          </div>
+          <p style={{ fontSize: 14, opacity: 0.9 }}>
+            Set this environment variable to your Directus instance URL.
+          </p>
+        </div>
       </main>
     );
   }
