@@ -22,6 +22,9 @@ export async function getStaticProps() {
     blocks = blocksJson?.data || [];
   }
 
+  // DEBUG: log blocks to see exact field names
+  console.log("Fetched blocks:", blocks);
+
   return {
     props: { page, blocks },
     revalidate: 60,
@@ -46,6 +49,11 @@ export default function Home({ page, blocks }) {
             padding: 20,
           }}
         >
+          {/* DEBUG: show full block data */}
+          <pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>
+            {JSON.stringify(block, null, 2)}
+          </pre>
+
           {/* Title */}
           {block.Title && <h2>{block.Title}</h2>}
 
