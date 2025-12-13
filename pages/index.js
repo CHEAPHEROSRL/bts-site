@@ -36,7 +36,7 @@ export async function getStaticProps() {
     if (blockContent) {
       blocks.push({
         ...blockContent,
-        collection: pb.collection, // keep track of block type
+        collection: pb.collection,
         sort: pb.sort,
       });
     }
@@ -69,46 +69,170 @@ export default function Home({ page, blocks }) {
             padding: 20,
           }}
         >
-          {/* Dynamic rendering based on available fields */}
-          {block.Title && <h2>{block.Title}</h2>}
-          {block.Headline && <h3>{block.Headline}</h3>}
-          {block.Content && <p>{block.Content}</p>}
-          {block.Image && (
-            <img
-              src={block.Image}
-              alt={block.Title || block.Headline || "Block image"}
-              style={{
-                maxWidth: "100%",
-                display: "block",
-                marginTop: 10,
-                marginBottom: 10,
-                objectFit: "cover",
-              }}
-            />
+          {/* Render block based on type */}
+          {block.collection === "block_hero" && (
+            <>
+              {block.Title && <h2>{block.Title}</h2>}
+              {block.Headline && <h3>{block.Headline}</h3>}
+              {block.Image && (
+                <img
+                  src={block.Image}
+                  alt={block.Title || block.Headline || "Hero Image"}
+                  style={{ maxWidth: "100%", marginTop: 10, marginBottom: 10 }}
+                />
+              )}
+              {block.ButtonGroup && Array.isArray(block.ButtonGroup) && (
+                <div style={{ marginTop: 10 }}>
+                  {block.ButtonGroup.map((btn, i) => (
+                    <a
+                      key={i}
+                      href={btn.link || "#"}
+                      style={{
+                        display: "inline-block",
+                        marginRight: 10,
+                        padding: "8px 16px",
+                        backgroundColor: "#0070f3",
+                        color: "#fff",
+                        textDecoration: "none",
+                        borderRadius: 4,
+                      }}
+                    >
+                      {btn.label || "Button"}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </>
           )}
-          {block.ButtonGroup && Array.isArray(block.ButtonGroup) && (
-            <div style={{ marginTop: 10 }}>
-              {block.ButtonGroup.map((btn, index) => (
-                <a
-                  key={index}
-                  href={btn.link || "#"}
-                  style={{
-                    display: "inline-block",
-                    marginRight: 10,
-                    padding: "8px 16px",
-                    backgroundColor: "#0070f3",
-                    color: "#fff",
-                    textDecoration: "none",
-                    borderRadius: 4,
-                  }}
-                >
-                  {btn.label || "Button"}
-                </a>
+
+          {block.collection === "block_richtext" && block.Content && (
+            <div dangerouslySetInnerHTML={{ __html: block.Content }} />
+          )}
+
+          {block.collection === "block_quote" && (
+            <>
+              {block.Quote && <blockquote>{block.Quote}</blockquote>}
+              {block.Author && <cite>{block.Author}</cite>}
+            </>
+          )}
+
+          {block.collection === "block_faqs" && block.Questions && Array.isArray(block.Questions) && (
+            <div>
+              {block.Questions.map((q, i) => (
+                <div key={i} style={{ marginBottom: 10 }}>
+                  <strong>{q.Question}</strong>
+                  <p>{q.Answer}</p>
+                </div>
               ))}
             </div>
           )}
 
-          {/* DEBUG: show collection name */}
+          {block.collection === "block_video" && block.VideoUrl && (
+            <video controls style={{ maxWidth: "100%" }}>
+              <source src={block.VideoUrl} type="video/mp4" />
+            </video>
+          )}
+
+          {block.collection === "block_steps" && block.Steps && Array.isArray(block.Steps) && (
+            <ol>
+              {block.Steps.map((s, i) => (
+                <li key={i}>{s.StepText}</li>
+              ))}
+            </ol>
+          )}
+
+          {block.collection === "block_gallery" && block.Images && Array.isArray(block.Images) && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {block.Images.map((img, i) => (
+                <img key={i} src={img} alt={img.alt || "Gallery Image"} style={{ maxWidth: "200px" }} />
+              ))}
+            </div>
+          )}
+
+          {block.collection === "block_logocloud" && block.Logos && Array.isArray(block.Logos) && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {block.Logos.map((logo, i) => (
+                <img key={i} src={logo.Image} alt={logo.Name || "Logo"} style={{ maxWidth: "100px" }} />
+              ))}
+            </div>
+          )}
+
+          {block.collection === "block_form" && block.FormFields && Array.isArray(block.FormFields) && (
+            <form>
+              {block.FormFields.map((f, i) => (
+                <div key={i} style={{ marginBottom: 10 }}>
+                  <label>{f.Label}</label>
+                  <input type={f.Type || "text"} name={f.Name} />
+                </div>
+              ))}
+              <button type="submit">Submit</button>
+            </form>
+          )}
+
+          {block.collection === "block_team" && block.Members && Array.isArray(block.Members) && (
+            <div>
+              {block.Members.map((m, i) => (
+                <div key={i}>
+                  {m.Name && <h4>{m.Name}</h4>}
+                  {m.Role && <p>{m.Role}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {block.collection === "block_testimonials" &&
+            block.Testimonials &&
+            Array.isArray(block.Testimonials) && (
+              <div>
+                {block.Testimonials.map((t, i) => (
+                  <div key={i} style={{ marginBottom: 10 }}>
+                    {t.Text && <p>"{t.Text}"</p>}
+                    {t.Author && <strong>- {t.Author}</strong>}
+                  </div>
+                ))}
+              </div>
+            )}
+
+          {block.collection === "block_columns" && block.Columns && Array.isArray(block.Columns) && (
+            <div style={{ display: "flex", gap: 10 }}>
+              {block.Columns.map((col, i) => (
+                <div key={i} style={{ flex: 1 }}>
+                  {col.Title && <h4>{col.Title}</h4>}
+                  {col.Content && <p>{col.Content}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {block.collection === "block_cta" && (
+            <>
+              {block.Headline && <h3>{block.Headline}</h3>}
+              {block.Content && <p>{block.Content}</p>}
+              {block.ButtonGroup && Array.isArray(block.ButtonGroup) && (
+                <div>
+                  {block.ButtonGroup.map((btn, i) => (
+                    <a
+                      key={i}
+                      href={btn.link || "#"}
+                      style={{
+                        display: "inline-block",
+                        marginRight: 10,
+                        padding: "8px 16px",
+                        backgroundColor: "#0070f3",
+                        color: "#fff",
+                        textDecoration: "none",
+                        borderRadius: 4,
+                      }}
+                    >
+                      {btn.label || "Button"}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Optional: show collection for debugging */}
           <small style={{ display: "block", marginTop: 10, color: "#888" }}>
             Block type: {block.collection}
           </small>
