@@ -8,6 +8,11 @@ async function fetchBlockContent(collection, itemId) {
 }
 
 export async function getStaticProps() {
+  // If DIRECTUS_URL is not set, return empty data
+  if (!DIRECTUS_URL) {
+    return { props: { page: null, blocks: [], missingConfig: true }, revalidate: 60 };
+  }
+
   // 1. Fetch Home page
   const res = await fetch(`${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`);
   const json = await res.json();
@@ -51,7 +56,17 @@ export async function getStaticProps() {
   };
 }
 
-export default function Home({ page, blocks }) {
+export default function Home({ page, blocks, missingConfig }) {
+  if (missingConfig) {
+    return (
+      <main style={{ fontFamily: "Arial, sans-serif", color: "#222", padding: 40 }}>
+        <h1>Configuration Required</h1>
+        <p>This site requires a Directus CMS connection to function.</p>
+        <p>Please set the <code>NEXT_PUBLIC_DIRECTUS_URL</code> environment variable to your Directus instance URL.</p>
+      </main>
+    );
+  }
+
   if (!page) return <p>No page data found.</p>;
 
   return (
