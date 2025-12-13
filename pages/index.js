@@ -2,9 +2,7 @@ const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
 
 export async function getStaticProps() {
   // 1. Fetch Home page
-  const res = await fetch(
-    `${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`
-  );
+  const res = await fetch(`${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`);
   const json = await res.json();
 
   const page = json?.data?.[0] || null;
@@ -13,11 +11,13 @@ export async function getStaticProps() {
     return { props: { page: null, blocks: [] }, revalidate: 60 };
   }
 
-  // 2. Fetch blocks
-  const blockIds = Array.isArray(page.blocks)
-    ? page.blocks.map((b) => (b.id ? b.id : b)) // handles IDs or object array
-    : [];
+  // 2. Determine block IDs
+  let blockIds = [];
+  if (Array.isArray(page.blocks)) {
+    blockIds = page.blocks.map((b) => (typeof b === "object" && b.id ? b.id : b));
+  }
 
+  // 3. Fetch blocks if any
   let blocks = [];
   if (blockIds.length > 0) {
     const blocksRes = await fetch(
@@ -29,7 +29,7 @@ export async function getStaticProps() {
 
   return {
     props: { page, blocks },
-    revalidate: 60, // ISR interval in seconds
+    revalidate: 60, // ISR refresh interval
   };
 }
 
