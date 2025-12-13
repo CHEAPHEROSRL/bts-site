@@ -10,17 +10,17 @@ export async function getStaticProps() {
     return { props: { page: null, blocks: [] }, revalidate: 60 };
   }
 
-  // 2. Fetch blocks — FIXED
+  // 2. Fetch blocks from the correct collection
   const blockIds = Array.isArray(page.blocks) ? page.blocks : [];
 
   let blocks = [];
-if (blockIds.length > 0) {
-  const blocksRes = await fetch(
-    `${DIRECTUS_URL}/items/page_blocks?filter[id][_in]=${blockIds.join(",")}`
-  );
-  const blocksJson = await blocksRes.json();
-  blocks = blocksJson?.data || [];
-}
+  if (blockIds.length > 0) {
+    const blocksRes = await fetch(
+      `${DIRECTUS_URL}/items/page_blocks?filter[id][_in]=${blockIds.join(",")}`
+    );
+    const blocksJson = await blocksRes.json();
+    blocks = blocksJson?.data || [];
+  }
 
   return {
     props: { page, blocks },
@@ -46,8 +46,52 @@ export default function Home({ page, blocks }) {
             padding: 20,
           }}
         >
-          {block.title && <h2>{block.title}</h2>}
-          {block.content && <p>{block.content}</p>}
+          {/* Title */}
+          {block.Title && <h2>{block.Title}</h2>}
+
+          {/* Headline */}
+          {block.Headline && <h3>{block.Headline}</h3>}
+
+          {/* Content */}
+          {block.Content && <p>{block.Content}</p>}
+
+          {/* Image */}
+          {block.Image && (
+            <img
+              src={block.Image}
+              alt={block.Title || block.Headline || "Block image"}
+              style={{
+                maxWidth: "100%",
+                display: "block",
+                marginTop: 10,
+                marginBottom: 10,
+                objectFit: "cover",
+              }}
+            />
+          )}
+
+          {/* Button Group */}
+          {block.ButtonGroup && Array.isArray(block.ButtonGroup) && (
+            <div style={{ marginTop: 10 }}>
+              {block.ButtonGroup.map((btn, index) => (
+                <a
+                  key={index}
+                  href={btn.link || "#"}
+                  style={{
+                    display: "inline-block",
+                    marginRight: 10,
+                    padding: "8px 16px",
+                    backgroundColor: "#0070f3",
+                    color: "#fff",
+                    textDecoration: "none",
+                    borderRadius: 4,
+                  }}
+                >
+                  {btn.label || "Button"}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </main>
