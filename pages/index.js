@@ -110,9 +110,11 @@ export default function Home({ page, blocks, missingConfig }) {
         <div
           key={block.id}
           style={{
-            border: "1px solid red",
+            border: "1px solid #ccc",
             marginBottom: 20,
             padding: 20,
+            backgroundColor: "#f9f9f9",
+            borderRadius: 8,
           }}
         >
           {/* Render block based on type */}
@@ -278,10 +280,19 @@ export default function Home({ page, blocks, missingConfig }) {
             </>
           )}
 
-          {/* Optional: show collection for debugging */}
-          <small style={{ display: "block", marginTop: 10, color: "#888" }}>
-            Block type: {block.collection}
-          </small>
+          {/* Debug view - show all block data as JSON */}
+          <details style={{ marginTop: 15, fontSize: 12, color: "#666" }}>
+            <summary>View raw block data</summary>
+            <pre style={{ 
+              background: "#eee", 
+              padding: 10, 
+              borderRadius: 4, 
+              overflow: "auto",
+              maxHeight: 200 
+            }}>
+              {JSON.stringify(block, null, 2)}
+            </pre>
+          </details>
         </div>
       ))}
     </main>
