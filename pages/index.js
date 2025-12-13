@@ -14,13 +14,13 @@ export async function getStaticProps() {
   const blockIds = Array.isArray(page.blocks) ? page.blocks : [];
 
   let blocks = [];
-  if (blockIds.length > 0) {
-    const blocksRes = await fetch(
-      `${DIRECTUS_URL}/items/blocks?filter[id][_in]=${blockIds.join(",")}`
-    );
-    const blocksJson = await blocksRes.json();
-    blocks = blocksJson?.data || [];
-  }
+if (blockIds.length > 0) {
+  const blocksRes = await fetch(
+    `${DIRECTUS_URL}/items/page_blocks?filter[id][_in]=${blockIds.join(",")}`
+  );
+  const blocksJson = await blocksRes.json();
+  blocks = blocksJson?.data || [];
+}
 
   return {
     props: { page, blocks },
