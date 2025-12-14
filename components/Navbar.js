@@ -29,7 +29,9 @@ export default function Navbar() {
 
   return (
     <header style={{
-      position: "relative",
+      position: "sticky",
+      top: 0,
+      zIndex: 1000,
       width: "100%",
       maxWidth: 1200,
       margin: "0 auto",
@@ -37,6 +39,7 @@ export default function Navbar() {
       display: "flex",
       flexDirection: "column",
       gap: 16,
+      background: "var(--background)",
     }}>
       <div style={{
         display: "flex",
