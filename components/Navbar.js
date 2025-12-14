@@ -1,10 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 export default function Navbar({ navigation, globals, ctaButtons }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const closeTimeoutRef = useRef(null);
+
+  const handleMouseEnter = (itemId) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setOpenDropdown(itemId);
+  };
+
+  const handleMouseLeave = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150);
+  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -90,9 +105,9 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
               <div key={item.id} style={{ position: "relative", display: "flex", alignItems: "center", height: 20 }}>
                 {item.hasChildren ? (
                   <div
-                    onMouseEnter={() => setOpenDropdown(item.id)}
-                    onMouseLeave={() => setOpenDropdown(null)}
-                    style={{ display: "flex", alignItems: "center", height: "100%" }}
+                    onMouseEnter={() => handleMouseEnter(item.id)}
+                    onMouseLeave={handleMouseLeave}
+                    style={{ display: "flex", alignItems: "center", height: "100%", paddingBottom: 16 }}
                   >
                     <span
                       style={{
@@ -122,7 +137,7 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                         borderRadius: 16,
                         padding: "20px 24px",
                         minWidth: 380,
-                        marginTop: 16,
+                        marginTop: 0,
                         boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
                         display: "flex",
                         flexDirection: "column",
