@@ -81,6 +81,9 @@ The site uses a block-based content system:
 ## CMS as Single Source of Truth (December 14, 2024)
 - **Navbar**: Now fetches from Directus `navigation` collection (id="main")
   - Supports dropdown menus for items with `has_children=true`
+  - Dropdown children include `description` and `icon` fields from CMS
+  - Enhanced dropdown design with purple icon tiles, titles, and descriptions
+  - Supported icon names: "file", "users", "help-circle" (with fallback)
   - Resolves page IDs to permalinks automatically
 - **Footer**: Now fetches from Directus `navigation` collection (id="footer") + `globals`
   - Menu items from footer navigation
