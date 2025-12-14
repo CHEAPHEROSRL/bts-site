@@ -49,58 +49,75 @@ export default function BlockRenderer({ blocks }) {
           
           {/* HERO BLOCK */}
           {block.collection === "block_hero" && (
-            <div style={{ 
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 48,
-              alignItems: "center",
-            }}>
-              <div style={{ gridColumn: "span 2" }}>
-                {block.title && (
-                  <p style={titleStyle}>{block.title}</p>
-                )}
-                <RenderHTML 
-                  html={block.headline} 
-                  style={{ 
-                    fontSize: 48, 
-                    fontWeight: 700, 
-                    color: "var(--foreground)", 
-                    marginBottom: 24,
-                    lineHeight: 1.1,
-                    fontFamily: "var(--font-display)",
-                  }} 
-                />
-                {block.content && (
-                  <div style={{ 
-                    fontSize: 18, 
-                    color: "var(--text-muted)", 
-                    lineHeight: 1.6,
-                    fontFamily: "var(--font-display)",
-                    marginBottom: 24,
-                  }}>
-                    {block.content}
-                  </div>
-                )}
-              </div>
-              {block.image && (
-                <div style={{ 
-                  overflow: "hidden", 
-                  borderRadius: "var(--radius-card)",
-                  border: "1px solid var(--card-border)",
+            <>
+              <div className="hero-block" style={{ 
+                display: "grid",
+                gap: 48,
+                alignItems: "center",
+              }}>
+                <div className="hero-content" style={{ 
+                  order: block.image_position === "left" ? 2 : 1,
+                  paddingTop: 48,
                 }}>
-                  <img 
-                    src={getImageUrl(block.image)} 
-                    alt={block.title || "Hero"} 
+                  {block.title && (
+                    <p style={titleStyle}>{block.title}</p>
+                  )}
+                  <RenderHTML 
+                    html={block.headline} 
                     style={{ 
-                      width: "100%", 
-                      height: "100%",
-                      maxHeight: 500,
-                      objectFit: "cover",
+                      fontSize: 48, 
+                      fontWeight: 700, 
+                      color: "var(--foreground)", 
+                      marginBottom: 24,
+                      lineHeight: 1.1,
+                      fontFamily: "var(--font-display)",
+                    }} 
+                  />
+                  <RenderHTML 
+                    html={block.content} 
+                    style={{ 
+                      fontSize: 18, 
+                      color: "var(--text-muted)", 
+                      lineHeight: 1.6,
+                      fontFamily: "var(--font-display)",
+                      marginBottom: 24,
                     }} 
                   />
                 </div>
-              )}
-            </div>
+                {block.image && (
+                  <div className="hero-image" style={{ 
+                    overflow: "hidden", 
+                    borderRadius: "var(--radius-card)",
+                    border: "1px solid var(--card-border)",
+                    order: block.image_position === "left" ? 1 : 2,
+                  }}>
+                    <img 
+                      src={getImageUrl(block.image)} 
+                      alt={block.title || "Hero"} 
+                      style={{ 
+                        width: "100%", 
+                        height: "100%",
+                        maxHeight: 700,
+                        objectFit: "cover",
+                      }} 
+                    />
+                  </div>
+                )}
+              </div>
+              <style jsx>{`
+                .hero-block {
+                  grid-template-columns: 1fr;
+                }
+                @media (min-width: 768px) {
+                  .hero-block {
+                    grid-template-columns: 2fr 1fr;
+                  }
+                  .hero-image {
+                    margin-right: -64px;
+                  }
+                }
+              `}</style>
+            </>
           )}
 
           {/* RICHTEXT BLOCK */}
