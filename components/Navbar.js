@@ -91,6 +91,7 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                   <div
                     onMouseEnter={() => setOpenDropdown(item.id)}
                     onMouseLeave={() => setOpenDropdown(null)}
+                    style={{ display: "flex", alignItems: "center" }}
                   >
                     <button
                       style={{
@@ -100,15 +101,17 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                         fontSize: 14,
                         fontWeight: 500,
                         cursor: "pointer",
-                        display: "flex",
+                        display: "inline-flex",
                         alignItems: "center",
                         gap: 4,
                         padding: 0,
                         fontFamily: "inherit",
+                        lineHeight: "normal",
+                        verticalAlign: "baseline",
                       }}
                     >
                       {item.title}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginTop: 1 }}>
                         <path d="M6 9l6 6 6-6"/>
                       </svg>
                     </button>
@@ -150,22 +153,26 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                     )}
                   </div>
                 ) : (
-                  <Link
-                    href={item.href}
-                    target={item.openInNewTab ? "_blank" : undefined}
-                    rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-                    style={{
-                      color: "#e2e8f0",
-                      textDecoration: "none",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      transition: "color 0.2s",
-                    }}
-                    onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
-                    onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
-                  >
-                    {item.title}
-                  </Link>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Link
+                      href={item.href}
+                      target={item.openInNewTab ? "_blank" : undefined}
+                      rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                      style={{
+                        color: "#e2e8f0",
+                        textDecoration: "none",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        transition: "color 0.2s",
+                        display: "inline-flex",
+                        alignItems: "center",
+                      }}
+                      onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
+                      onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
+                    >
+                      {item.title}
+                    </Link>
+                  </div>
                 )}
               </div>
             ))}
