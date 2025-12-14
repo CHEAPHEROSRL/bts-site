@@ -1,31 +1,56 @@
 import BlockRenderer from "@/components/BlockRenderer";
-import { fetchPageBlocks, getDirectusUrl } from "@/lib/directus";
+import { fetchPageBlocks } from "@/lib/directus";
 
 const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
+  if (!DIRECTUS_URL) {
+    return { paths: [], fallback: "blocking" };
+  }
+
+  try {
+    const res = await fetch(`${DIRECTUS_URL}/items/pages`);
+    const json = await res.json();
+    const pages = json?.data || [];
+
+    const paths = pages
+      .filter(page => page.permalink && page.permalink !== "/")
+      .map(page => ({
+        params: { slug: page.permalink.replace(/^\//, "").split("/") }
+      }));
+
+    return { paths, fallback: "blocking" };
+  } catch (e) {
+    return { paths: [], fallback: "blocking" };
+  }
+}
+
+export async function getStaticProps({ params }) {
   if (!DIRECTUS_URL) {
     return { props: { page: null, blocks: [], missingConfig: true }, revalidate: 60 };
   }
 
+  const slug = params?.slug?.join("/") || "";
+  const permalink = `/${slug}`;
+
   try {
-    const res = await fetch(`${DIRECTUS_URL}/items/pages?filter[title][_eq]=Home`);
+    const res = await fetch(`${DIRECTUS_URL}/items/pages?filter[permalink][_eq]=${encodeURIComponent(permalink)}`);
     const json = await res.json();
     const page = json?.data?.[0] || null;
 
     if (!page) {
-      return { props: { page: null, blocks: [] }, revalidate: 60 };
+      return { notFound: true };
     }
 
     const blocks = await fetchPageBlocks(page);
     return { props: { page, blocks }, revalidate: 60 };
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching page data:", error);
     return { props: { page: null, blocks: [], error: true }, revalidate: 60 };
   }
 }
 
-export default function Home({ page, blocks, missingConfig, error }) {
+export default function DynamicPage({ page, blocks, missingConfig, error }) {
   if (missingConfig) {
     return (
       <main style={{ fontFamily: "Inter, Arial, sans-serif", color: "#fff", padding: 60, background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>

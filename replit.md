@@ -25,13 +25,20 @@ The site uses a block-based content system:
 ### Page Structure
 - `pages/_app.js` - Global layout wrapper with Footer component
 - `pages/_document.js` - Custom HTML document structure
-- `pages/index.js` - Home page with Directus data fetching
-- `pages/api/` - API routes directory (includes example endpoint)
+- `pages/index.js` - Home page (fetches page with title "Home")
+- `pages/[...slug].js` - Dynamic catch-all route for all other pages (fetches by permalink)
+- `pages/api/` - API routes directory
+
+### Components
+- `components/BlockRenderer.js` - Shared component that renders all Directus block types
+- `components/Footer.js` - Site-wide footer with navigation links
+
+### Shared Libraries
+- `lib/directus.js` - Shared Directus API helpers (fetchItem, fetchItems, fetchPageBlocks)
 
 ### Styling Approach
 - Global CSS in `styles/globals.css` with CSS custom properties
-- CSS Modules for component-specific styles (`Home.module.css`)
-- Inline styles used in some components (Footer)
+- Inline styles used in components for consistency
 
 ### Path Aliases
 - `@/*` maps to the project root for cleaner imports
@@ -42,12 +49,30 @@ The site uses a block-based content system:
 - **Purpose**: Headless CMS for all page and block content
 - **Configuration**: Requires `NEXT_PUBLIC_DIRECTUS_URL` environment variable
 - **Collections Used**:
-  - `pages` - Page definitions with block references
+  - `pages` - Page definitions with permalink and block references
   - `page_blocks` - Block metadata (collection type, item ID, visibility)
-  - `block_gallery` - Gallery block content
-  - `block_gallery_files` - Gallery item files
-  - `block_logocloud` - Logo cloud block content
+  - `block_hero` - Hero sections with title, headline, content, image
+  - `block_richtext` - Rich text content blocks
+  - `block_quote` - Quote blocks with author
+  - `block_faqs` - FAQ accordion blocks
+  - `block_video` - Video embeds (supports Loom)
+  - `block_steps` - Process/steps blocks
+  - `block_gallery` - Image gallery blocks
+  - `block_logocloud` - Logo cloud blocks
+  - `block_form` - Contact form blocks
+  - `block_team` - Team info blocks
+  - `block_testimonials` - Testimonial blocks
+  - `block_columns` - Multi-column layouts
+  - `block_cta` - Call-to-action blocks
 - **API Pattern**: REST API calls to `/items/{collection}` endpoints
+- **Image URLs**: `${DIRECTUS_URL}/assets/${imageId}`
 
 ### Environment Variables Required
 - `NEXT_PUBLIC_DIRECTUS_URL` - Base URL for the Directus instance
+
+## Recent Changes (December 2024)
+- Implemented dynamic page routing - all Directus pages now render with consistent styling
+- Created shared BlockRenderer component for all block types
+- Added catch-all route `[...slug].js` for dynamic pages
+- Centralized Directus fetch logic in `lib/directus.js`
+- Pages without blocks configured in Directus show the footer only (expected behavior)
