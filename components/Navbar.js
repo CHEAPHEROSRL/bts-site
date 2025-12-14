@@ -13,57 +13,53 @@ export default function Navbar() {
 
   return (
     <header style={{
-      position: "relative",
       width: "100%",
-      maxWidth: 1200,
-      margin: "0 auto",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column",
-      gap: 16,
+      background: "#0d0d1a",
+      padding: "16px 24px",
     }}>
       <div style={{
+        maxWidth: 1200,
+        margin: "0 auto",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         gap: 16,
-        flexWrap: "wrap",
       }}>
         <div style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flex: 1,
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-          padding: "12px 24px",
-          borderRadius: 16,
-          minWidth: 0,
+          background: "linear-gradient(90deg, #1a1a2e 0%, #1e1e3a 50%, #1a1a2e 100%)",
+          padding: "10px 20px",
+          borderRadius: 50,
+          border: "1px solid rgba(255,255,255,0.05)",
         }}>
           <Link href="/" style={{
             display: "flex",
             alignItems: "center",
             gap: 10,
             textDecoration: "none",
-            padding: "8px 0",
           }}>
             <div style={{
-              width: 36,
-              height: 36,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              width: 32,
+              height: 32,
+              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
               borderRadius: 8,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontWeight: 800,
+              fontWeight: 700,
               color: "#fff",
-              fontSize: 18,
+              fontSize: 16,
             }}>
               A
             </div>
             <span style={{
-              fontSize: 20,
-              fontWeight: 700,
+              fontSize: 17,
+              fontWeight: 600,
               color: "#fff",
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.01em",
             }}>
               AgencyOS
             </span>
@@ -71,21 +67,22 @@ export default function Navbar() {
 
           <nav style={{
             display: "none",
-            gap: 24,
+            alignItems: "center",
+            gap: 32,
           }} className="desktop-nav">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 style={{
-                  color: "#a0aec0",
+                  color: "#9ca3af",
                   textDecoration: "none",
-                  fontSize: 15,
-                  fontWeight: 500,
+                  fontSize: 14,
+                  fontWeight: 400,
                   transition: "color 0.2s",
                 }}
                 onMouseEnter={(e) => e.target.style.color = "#fff"}
-                onMouseLeave={(e) => e.target.style.color = "#a0aec0"}
+                onMouseLeave={(e) => e.target.style.color = "#9ca3af"}
               >
                 {item.title}
               </Link>
@@ -118,75 +115,68 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div style={{
-          display: "none",
-          gap: 12,
-        }} className="desktop-cta">
-          <Link
-            href="/contact-us"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "14px 28px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "#fff",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 15,
-              textDecoration: "none",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 6px 20px rgba(102, 126, 234, 0.5)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "0 4px 15px rgba(102, 126, 234, 0.4)";
-            }}
-          >
-            Let's Talk
-          </Link>
-        </div>
+        <Link
+          href="/contact-us"
+          className="desktop-cta"
+          style={{
+            display: "none",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "12px 24px",
+            background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)",
+            color: "#fff",
+            borderRadius: 50,
+            fontWeight: 500,
+            fontSize: 14,
+            textDecoration: "none",
+            boxShadow: "0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Let's Talk
+        </Link>
       </div>
 
       {mobileMenuOpen && (
         <div style={{
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-          borderRadius: 16,
+          maxWidth: 1200,
+          margin: "16px auto 0",
+          background: "linear-gradient(90deg, #1a1a2e 0%, #1e1e3a 50%, #1a1a2e 100%)",
+          borderRadius: 20,
           padding: 20,
           display: "flex",
           flexDirection: "column",
-          gap: 8,
-        }} className="mobile-menu">
+          gap: 4,
+          border: "1px solid rgba(255,255,255,0.05)",
+        }}>
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
               style={{
-                color: "#a0aec0",
+                color: "#9ca3af",
                 textDecoration: "none",
-                fontSize: 16,
-                fontWeight: 500,
+                fontSize: 15,
+                fontWeight: 400,
                 padding: "12px 16px",
                 borderRadius: 8,
                 transition: "background 0.2s, color 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.target.style.background = "rgba(255,255,255,0.1)";
+                e.target.style.background = "rgba(255,255,255,0.05)";
                 e.target.style.color = "#fff";
               }}
               onMouseLeave={(e) => {
                 e.target.style.background = "transparent";
-                e.target.style.color = "#a0aec0";
+                e.target.style.color = "#9ca3af";
               }}
             >
               {item.title}
             </Link>
           ))}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", margin: "8px 0" }} />
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", margin: "8px 0" }} />
           <Link
             href="/contact-us"
             onClick={() => setMobileMenuOpen(false)}
@@ -194,13 +184,14 @@ export default function Navbar() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "14px 28px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              padding: "12px 24px",
+              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)",
               color: "#fff",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 15,
+              borderRadius: 50,
+              fontWeight: 500,
+              fontSize: 14,
               textDecoration: "none",
+              boxShadow: "0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3)",
             }}
           >
             Let's Talk
@@ -217,9 +208,6 @@ export default function Navbar() {
             display: flex !important;
           }
           .mobile-menu-btn {
-            display: none !important;
-          }
-          .mobile-menu {
             display: none !important;
           }
         }
