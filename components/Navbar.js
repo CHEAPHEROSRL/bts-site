@@ -119,14 +119,14 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                         left: "50%",
                         transform: "translateX(-50%)",
                         background: "#1e293b",
-                        borderRadius: 12,
-                        padding: 12,
-                        minWidth: 320,
-                        marginTop: 12,
-                        boxShadow: "0 10px 40px rgba(0,0,0,0.4)",
+                        borderRadius: 16,
+                        padding: "20px 24px",
+                        minWidth: 380,
+                        marginTop: 16,
+                        boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 4,
+                        gap: 0,
                       }}>
                         {item.children.map((child) => (
                           <Link
@@ -137,28 +137,28 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                             style={{
                               display: "flex",
                               alignItems: "flex-start",
-                              gap: 12,
+                              gap: 16,
                               color: "#e2e8f0",
                               textDecoration: "none",
-                              padding: "12px 14px",
+                              padding: "16px 8px",
                               borderRadius: 8,
                               transition: "background 0.2s",
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
                             onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                           >
                             <div style={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: 8,
-                              background: "var(--primary-600)",
+                              width: 48,
+                              height: 48,
+                              borderRadius: 10,
+                              background: "#6366f1",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               flexShrink: 0,
                             }}>
                               {(child.icon === "file" || child.icon === "description") && (
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                   <polyline points="14 2 14 8 20 8"/>
                                   <line x1="16" y1="13" x2="8" y2="13"/>
@@ -166,40 +166,42 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                                 </svg>
                               )}
                               {(child.icon === "users" || child.icon === "person_pin") && (
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-                                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                  <circle cx="9" cy="7" r="4"/>
-                                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                  <circle cx="12" cy="7" r="4"/>
                                 </svg>
                               )}
                               {(child.icon === "help-circle" || child.icon === "support") && (
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <circle cx="12" cy="12" r="10"/>
-                                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                  <circle cx="12" cy="12" r="4"/>
+                                  <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/>
+                                  <line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/>
+                                  <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/>
+                                  <line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/>
                                 </svg>
                               )}
                               {!child.icon && (
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
                                   <circle cx="12" cy="12" r="10"/>
                                 </svg>
                               )}
                             </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ flex: 1, minWidth: 0, paddingTop: 2 }}>
                               <div style={{
-                                fontSize: 15,
+                                fontSize: 16,
                                 fontWeight: 600,
                                 color: "#fff",
-                                marginBottom: 2,
+                                marginBottom: 4,
+                                letterSpacing: "-0.01em",
                               }}>
                                 {child.title}
                               </div>
                               {(child.description || child.label) && (
                                 <div style={{
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   color: "#94a3b8",
-                                  lineHeight: 1.4,
+                                  lineHeight: 1.5,
                                 }}>
                                   {child.description || child.label}
                                 </div>
