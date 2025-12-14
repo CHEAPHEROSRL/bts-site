@@ -1,3 +1,5 @@
+import FaqAccordion from "./FaqAccordion";
+
 const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
 
 function getImageUrl(imageId) {
@@ -161,35 +163,8 @@ export default function BlockRenderer({ blocks }) {
           {block.collection === "block_faqs" && (
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
               {block.title && <p style={{ ...titleStyle, textAlign: block.alignment || "left" }}>{block.title}</p>}
-              <RenderHTML html={block.headline} style={{ ...headlineStyle, textAlign: block.alignment || "left" }} />
-              {block.faqs?.map((faq, i) => (
-                <div key={i} style={{ 
-                  marginBottom: 16, 
-                  padding: 24, 
-                  background: "var(--card-bg)", 
-                  borderRadius: "var(--radius-card)", 
-                  border: "1px solid var(--card-border)",
-                  transition: "border-color 0.2s",
-                }}>
-                  <h4 style={{ 
-                    fontSize: 16, 
-                    fontWeight: 600, 
-                    marginBottom: 8, 
-                    color: "var(--foreground)",
-                    fontFamily: "var(--font-display)",
-                  }}>
-                    {faq.title}
-                  </h4>
-                  <p style={{ 
-                    fontSize: 14, 
-                    lineHeight: 1.7, 
-                    color: "var(--text-muted)", 
-                    margin: 0 
-                  }}>
-                    {faq.answer}
-                  </p>
-                </div>
-              ))}
+              <RenderHTML html={block.headline} style={{ ...headlineStyle, textAlign: block.alignment || "left", marginBottom: 32 }} />
+              <FaqAccordion faqs={block.faqs} />
             </div>
           )}
 
