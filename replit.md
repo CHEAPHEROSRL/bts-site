@@ -30,6 +30,7 @@ The site uses a block-based content system:
 - `pages/api/` - API routes directory
 
 ### Components
+- `components/Navbar.js` - Site-wide navigation header with logo, nav links, and CTA button (mobile responsive)
 - `components/BlockRenderer.js` - Shared component that renders all Directus block types
 - `components/Footer.js` - Site-wide footer with navigation links
 
