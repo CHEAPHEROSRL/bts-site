@@ -107,7 +107,7 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                   <div
                     onMouseEnter={() => handleMouseEnter(item.id)}
                     onMouseLeave={handleMouseLeave}
-                    style={{ display: "flex", alignItems: "center", height: "100%", paddingBottom: 16 }}
+                    style={{ display: "flex", alignItems: "center", height: "100%", position: "relative" }}
                   >
                     <span
                       style={{
@@ -133,16 +133,18 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                         top: "100%",
                         left: "50%",
                         transform: "translateX(-50%)",
-                        background: "#1e293b",
-                        borderRadius: 16,
-                        padding: "20px 24px",
-                        minWidth: 380,
-                        marginTop: 0,
-                        boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 0,
+                        paddingTop: 12,
                       }}>
+                        <div style={{
+                          background: "#1e293b",
+                          borderRadius: 16,
+                          padding: "20px 24px",
+                          minWidth: 380,
+                          boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0,
+                        }}>
                         {item.children.map((child) => (
                           <Link
                             key={child.id}
@@ -224,6 +226,7 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                             </div>
                           </Link>
                         ))}
+                        </div>
                       </div>
                     )}
                   </div>
