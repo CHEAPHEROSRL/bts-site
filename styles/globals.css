@@ -1,21 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap');
+
 :root {
+  /* AgencyOS Color Palette - Violet Primary */
+  --primary-50: #f5f3ff;
+  --primary-100: #ede9fe;
+  --primary-200: #ddd6fe;
+  --primary-300: #c4b5fd;
+  --primary-400: #a78bfa;
+  --primary-500: #8b5cf6;
+  --primary-600: #7c3aed;
+  --primary-700: #6d28d9;
+  --primary-800: #5b21b6;
+  --primary-900: #4c1d95;
+
+  /* Slate Gray Palette */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --gray-950: #020617;
+
+  /* Light Mode Theme */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: var(--gray-900);
   --card-bg: #ffffff;
-  --card-border: #eee;
-  --text-muted: #666;
-  --text-secondary: #888;
-  --section-bg: #f8f9fa;
+  --card-border: var(--gray-200);
+  --text-muted: var(--gray-600);
+  --text-secondary: var(--gray-500);
+  --section-bg: var(--gray-50);
+  --header-bg: var(--gray-900);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+
+  /* Border Radius - AgencyOS uses 'lg' (0.5rem) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-card: 0.5rem;
+  --radius-button: 0.5rem;
+  --radius-panel: 0.5rem;
 }
 
 [data-theme="dark"] {
-  --background: #0f0f1a;
-  --foreground: #f0f0f0;
-  --card-bg: #1a1a2e;
-  --card-border: #2a2a4a;
-  --text-muted: #a0a0a0;
-  --text-secondary: #888;
-  --section-bg: #16162a;
+  --background: var(--gray-950);
+  --foreground: var(--gray-100);
+  --card-bg: var(--gray-900);
+  --card-border: var(--gray-700);
+  --text-muted: var(--gray-400);
+  --text-secondary: var(--gray-500);
+  --section-bg: var(--gray-900);
+  --header-bg: var(--gray-900);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -27,10 +75,11 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6;
 }
 
 * {
@@ -42,4 +91,19 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+::selection {
+  background: var(--primary-500);
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+code, pre {
+  font-family: var(--font-mono);
 }

@@ -33,9 +33,9 @@ export default function Navbar() {
       top: 0,
       zIndex: 1000,
       width: "100%",
-      maxWidth: 1200,
+      maxWidth: 1280,
       margin: "0 auto",
-      padding: "20px",
+      padding: "16px 32px",
       display: "flex",
       flexDirection: "column",
       gap: 16,
@@ -51,39 +51,31 @@ export default function Navbar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          position: "relative",
           flex: 1,
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-          padding: "12px 24px",
-          borderRadius: 16,
+          background: "#0f172a",
+          padding: "8px 24px",
+          borderRadius: "var(--radius-card)",
           minWidth: 0,
         }}>
           <Link href="/" style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: 8,
             textDecoration: "none",
             padding: "8px 0",
             flexShrink: 0,
           }}>
-            <div style={{
-              width: 36,
-              height: 36,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              color: "#fff",
-              fontSize: 18,
-            }}>
-              A
-            </div>
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" style={{ color: "#fff" }}>
+              <rect width="32" height="32" rx="6" fill="currentColor"/>
+              <path d="M8 22L16 10L24 22H8Z" fill="#0f172a"/>
+            </svg>
             <span style={{
-              fontSize: 20,
-              fontWeight: 700,
+              fontSize: 18,
+              fontWeight: 600,
               color: "#fff",
-              letterSpacing: "-0.02em",
+              fontFamily: "var(--font-display)",
+              letterSpacing: "-0.01em",
             }}>
               AgencyOS
             </span>
@@ -91,7 +83,7 @@ export default function Navbar() {
 
           <nav style={{
             display: "none",
-            gap: 32,
+            gap: 24,
             position: "absolute",
             left: "50%",
             transform: "translateX(-50%)",
@@ -101,14 +93,14 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  color: "#ffffff",
+                  color: "#e2e8f0",
                   textDecoration: "none",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  transition: "opacity 0.2s",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => e.target.style.opacity = "0.8"}
-                onMouseLeave={(e) => e.target.style.opacity = "1"}
+                onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
+                onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
               >
                 {item.title}
               </Link>
@@ -119,29 +111,29 @@ export default function Navbar() {
             <button
               onClick={toggleDarkMode}
               style={{
-                display: "flex",
+                display: "none",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 40,
-                height: 40,
+                width: 36,
+                height: 36,
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
-                color: "#fff",
-                borderRadius: 8,
-                transition: "background 0.2s",
+                color: "#e2e8f0",
+                borderRadius: "var(--radius-md)",
+                transition: "color 0.2s",
               }}
-              className="dark-mode-toggle"
+              className="dark-mode-toggle-desktop"
               aria-label="Toggle dark mode"
-              onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.1)"}
-              onMouseLeave={(e) => e.target.style.background = "transparent"}
+              onMouseEnter={(e) => e.currentTarget.style.color = "#94a3b8"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "#e2e8f0"}
             >
               {isDark ? (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1zm0 15a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zm9-6a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1zM5 12a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1zm14.071-5.071a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zM7.05 16.95a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zm12.02.707a1 1 0 0 1-1.414 0l-.707-.707a1 1 0 1 1 1.414-1.414l.707.707a1 1 0 0 1 0 1.414zM7.05 7.05a1 1 0 0 1-1.414 0l-.707-.707a1 1 0 0 1 1.414-1.414l.707.707a1 1 0 0 1 0 1.414zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
                 </svg>
               ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
                 </svg>
               )}
@@ -183,38 +175,60 @@ export default function Navbar() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              padding: "14px 28px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              padding: "12px 24px",
+              background: "var(--primary-600)",
               color: "#fff",
-              borderRadius: 12,
+              borderRadius: "var(--radius-button)",
               fontWeight: 600,
-              fontSize: 15,
+              fontSize: 14,
               textDecoration: "none",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
+              transition: "background 0.2s, transform 0.15s",
+              fontFamily: "var(--font-sans)",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 6px 20px rgba(102, 126, 234, 0.5)";
+              e.target.style.background = "var(--primary-700)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "0 4px 15px rgba(102, 126, 234, 0.4)";
+              e.target.style.background = "var(--primary-600)";
             }}
           >
             Let's Talk
+          </Link>
+          <Link
+            href="/portal"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              padding: "12px 24px",
+              background: "transparent",
+              color: "var(--primary-600)",
+              borderRadius: "var(--radius-button)",
+              fontWeight: 600,
+              fontSize: 14,
+              textDecoration: "none",
+              transition: "background 0.2s",
+              fontFamily: "var(--font-sans)",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = "var(--primary-50)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "transparent";
+            }}
+          >
+            Login
           </Link>
         </div>
       </div>
 
       {mobileMenuOpen && (
         <div style={{
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-          borderRadius: 16,
-          padding: 20,
+          background: "#0f172a",
+          borderRadius: "var(--radius-card)",
+          padding: 16,
           display: "flex",
           flexDirection: "column",
-          gap: 8,
+          gap: 4,
         }} className="mobile-menu">
           {navItems.map((item) => (
             <Link
@@ -222,16 +236,16 @@ export default function Navbar() {
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
               style={{
-                color: "#ffffff",
+                color: "#e2e8f0",
                 textDecoration: "none",
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 15,
+                fontWeight: 500,
                 padding: "12px 16px",
-                borderRadius: 8,
+                borderRadius: "var(--radius-md)",
                 transition: "background 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.target.style.background = "rgba(255,255,255,0.1)";
+                e.target.style.background = "rgba(255,255,255,0.05)";
               }}
               onMouseLeave={(e) => {
                 e.target.style.background = "transparent";
@@ -240,7 +254,7 @@ export default function Navbar() {
               {item.title}
             </Link>
           ))}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", margin: "8px 0" }} />
+          <div style={{ borderTop: "1px solid #334155", margin: "8px 0" }} />
           <Link
             href="/contact-us"
             onClick={() => setMobileMenuOpen(false)}
@@ -248,12 +262,12 @@ export default function Navbar() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "14px 28px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              padding: "12px 24px",
+              background: "var(--primary-600)",
               color: "#fff",
-              borderRadius: 12,
+              borderRadius: "var(--radius-button)",
               fontWeight: 600,
-              fontSize: 15,
+              fontSize: 14,
               textDecoration: "none",
             }}
           >
@@ -275,6 +289,9 @@ export default function Navbar() {
           }
           .mobile-menu {
             display: none !important;
+          }
+          .dark-mode-toggle-desktop {
+            display: flex !important;
           }
         }
       `}</style>
