@@ -2,6 +2,8 @@ import { useState } from "react";
 
 export default function FaqAccordion({ faqs }) {
   const [openIndex, setOpenIndex] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_COUNT = 5;
 
   const toggleFaq = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -9,9 +11,12 @@ export default function FaqAccordion({ faqs }) {
 
   if (!faqs || faqs.length === 0) return null;
 
+  const visibleFaqs = showAll ? faqs : faqs.slice(0, INITIAL_COUNT);
+  const hasMore = faqs.length > INITIAL_COUNT;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {faqs.map((faq, i) => {
+      {visibleFaqs.map((faq, i) => {
         const isOpen = openIndex === i;
         
         return (
@@ -66,6 +71,34 @@ export default function FaqAccordion({ faqs }) {
           </div>
         );
       })}
+      
+      {hasMore && !showAll && (
+        <div style={{ textAlign: "center", marginTop: 16 }}>
+          <button
+            onClick={() => setShowAll(true)}
+            style={{
+              padding: "12px 24px",
+              background: "transparent",
+              border: "1px solid var(--primary-500)",
+              borderRadius: "var(--radius-button)",
+              color: "var(--primary-500)",
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              fontFamily: "var(--font-sans)",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = "var(--primary-50)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "transparent";
+            }}
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
