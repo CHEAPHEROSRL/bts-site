@@ -84,37 +84,34 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
             position: "absolute",
             left: "50%",
             transform: "translateX(-50%)",
+            alignItems: "center",
           }} className="desktop-nav">
             {navItems.map((item) => (
-              <div key={item.id} style={{ position: "relative" }}>
+              <div key={item.id} style={{ position: "relative", display: "flex", alignItems: "center", height: 20 }}>
                 {item.hasChildren ? (
                   <div
                     onMouseEnter={() => setOpenDropdown(item.id)}
                     onMouseLeave={() => setOpenDropdown(null)}
-                    style={{ display: "flex", alignItems: "center" }}
+                    style={{ display: "flex", alignItems: "center", height: "100%" }}
                   >
-                    <button
+                    <span
                       style={{
                         color: "#e2e8f0",
-                        background: "transparent",
-                        border: "none",
                         fontSize: 14,
                         fontWeight: 500,
                         cursor: "pointer",
-                        display: "inline-flex",
+                        display: "flex",
                         alignItems: "center",
                         gap: 4,
-                        padding: 0,
-                        fontFamily: "inherit",
-                        lineHeight: "normal",
-                        verticalAlign: "baseline",
+                        lineHeight: "20px",
+                        height: 20,
                       }}
                     >
                       {item.title}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginTop: 1 }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M6 9l6 6 6-6"/>
                       </svg>
-                    </button>
+                    </span>
                     {openDropdown === item.id && item.children?.length > 0 && (
                       <div style={{
                         position: "absolute",
@@ -153,26 +150,26 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                     )}
                   </div>
                 ) : (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <Link
-                      href={item.href}
-                      target={item.openInNewTab ? "_blank" : undefined}
-                      rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-                      style={{
-                        color: "#e2e8f0",
-                        textDecoration: "none",
-                        fontSize: 14,
-                        fontWeight: 500,
-                        transition: "color 0.2s",
-                        display: "inline-flex",
-                        alignItems: "center",
-                      }}
-                      onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
-                      onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
-                    >
-                      {item.title}
-                    </Link>
-                  </div>
+                  <Link
+                    href={item.href}
+                    target={item.openInNewTab ? "_blank" : undefined}
+                    rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                    style={{
+                      color: "#e2e8f0",
+                      textDecoration: "none",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      transition: "color 0.2s",
+                      display: "flex",
+                      alignItems: "center",
+                      lineHeight: "20px",
+                      height: 20,
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
+                    onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
+                  >
+                    {item.title}
+                  </Link>
                 )}
               </div>
             ))}
