@@ -1,6 +1,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-bg: #ffffff;
+  --card-border: #eee;
+  --text-muted: #666;
+  --text-secondary: #888;
+  --section-bg: #f8f9fa;
+}
+
+[data-theme="dark"] {
+  --background: #0f0f1a;
+  --foreground: #f0f0f0;
+  --card-bg: #1a1a2e;
+  --card-border: #2a2a4a;
+  --text-muted: #a0a0a0;
+  --text-secondary: #888;
+  --section-bg: #16162a;
 }
 
 html,
@@ -15,6 +30,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 * {
