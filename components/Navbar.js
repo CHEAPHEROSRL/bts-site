@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar({ navigation, globals }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -20,12 +21,8 @@ export default function Navbar() {
     document.documentElement.setAttribute("data-theme", newMode ? "dark" : "light");
   };
 
-  const navItems = [
-    { title: "Home", href: "/" },
-    { title: "Services", href: "/services" },
-    { title: "Team", href: "/team" },
-    { title: "Manifesto", href: "/manifesto" },
-  ];
+  const navItems = navigation?.items || [];
+  const siteTitle = globals?.title || "AgencyOS";
 
   return (
     <header style={{
@@ -77,7 +74,7 @@ export default function Navbar() {
               fontFamily: "var(--font-display)",
               letterSpacing: "-0.01em",
             }}>
-              AgencyOS
+              {siteTitle}
             </span>
           </Link>
 
@@ -89,21 +86,88 @@ export default function Navbar() {
             transform: "translateX(-50%)",
           }} className="desktop-nav">
             {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{
-                  color: "#e2e8f0",
-                  textDecoration: "none",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
-                onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
-              >
-                {item.title}
-              </Link>
+              <div key={item.id} style={{ position: "relative" }}>
+                {item.hasChildren ? (
+                  <div
+                    onMouseEnter={() => setOpenDropdown(item.id)}
+                    onMouseLeave={() => setOpenDropdown(null)}
+                  >
+                    <button
+                      style={{
+                        color: "#e2e8f0",
+                        background: "transparent",
+                        border: "none",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        padding: 0,
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      {item.title}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M6 9l6 6 6-6"/>
+                      </svg>
+                    </button>
+                    {openDropdown === item.id && item.children?.length > 0 && (
+                      <div style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        background: "#1e293b",
+                        borderRadius: 8,
+                        padding: 8,
+                        minWidth: 180,
+                        marginTop: 8,
+                        boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+                      }}>
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.id}
+                            href={child.href}
+                            target={child.openInNewTab ? "_blank" : undefined}
+                            rel={child.openInNewTab ? "noopener noreferrer" : undefined}
+                            style={{
+                              display: "block",
+                              color: "#e2e8f0",
+                              textDecoration: "none",
+                              fontSize: 14,
+                              fontWeight: 500,
+                              padding: "10px 12px",
+                              borderRadius: 6,
+                              transition: "background 0.2s",
+                            }}
+                            onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.1)"}
+                            onMouseLeave={(e) => e.target.style.background = "transparent"}
+                          >
+                            {child.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    target={item.openInNewTab ? "_blank" : undefined}
+                    rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                    style={{
+                      color: "#e2e8f0",
+                      textDecoration: "none",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      transition: "color 0.2s",
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = "#94a3b8"}
+                    onMouseLeave={(e) => e.target.style.color = "#e2e8f0"}
+                  >
+                    {item.title}
+                  </Link>
+                )}
+              </div>
             ))}
           </nav>
 
@@ -231,28 +295,76 @@ export default function Navbar() {
           gap: 4,
         }} className="mobile-menu">
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileMenuOpen(false)}
-              style={{
-                color: "#e2e8f0",
-                textDecoration: "none",
-                fontSize: 15,
-                fontWeight: 500,
-                padding: "12px 16px",
-                borderRadius: "var(--radius-md)",
-                transition: "background 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "rgba(255,255,255,0.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-              }}
-            >
-              {item.title}
-            </Link>
+            <div key={item.id}>
+              {item.hasChildren ? (
+                <>
+                  <div
+                    style={{
+                      color: "#94a3b8",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      padding: "12px 16px 8px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                  {item.children?.map((child) => (
+                    <Link
+                      key={child.id}
+                      href={child.href}
+                      target={child.openInNewTab ? "_blank" : undefined}
+                      rel={child.openInNewTab ? "noopener noreferrer" : undefined}
+                      onClick={() => setMobileMenuOpen(false)}
+                      style={{
+                        color: "#e2e8f0",
+                        textDecoration: "none",
+                        fontSize: 15,
+                        fontWeight: 500,
+                        padding: "10px 16px 10px 24px",
+                        borderRadius: "var(--radius-md)",
+                        display: "block",
+                        transition: "background 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "rgba(255,255,255,0.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = "transparent";
+                      }}
+                    >
+                      {child.title}
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <Link
+                  href={item.href}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    color: "#e2e8f0",
+                    textDecoration: "none",
+                    fontSize: 15,
+                    fontWeight: 500,
+                    padding: "12px 16px",
+                    borderRadius: "var(--radius-md)",
+                    display: "block",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = "rgba(255,255,255,0.05)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = "transparent";
+                  }}
+                >
+                  {item.title}
+                </Link>
+              )}
+            </div>
           ))}
           <div style={{ borderTop: "1px solid #334155", margin: "8px 0" }} />
           <Link
