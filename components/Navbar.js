@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function Navbar({ navigation, globals }) {
+export default function Navbar({ navigation, globals, ctaButtons }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -230,60 +230,33 @@ export default function Navbar({ navigation, globals }) {
           </div>
         </div>
 
-        {/* CTA Buttons: These are intentionally hardcoded as they represent core site actions.
-            Could be made CMS-driven via globals.cta_primary_url, globals.cta_primary_text, etc. if needed. */}
         <div style={{
           display: "none",
           gap: 12,
         }} className="desktop-cta">
-          <Link
-            href="/contact-us"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "12px 24px",
-              background: "var(--primary-600)",
-              color: "#fff",
-              borderRadius: "var(--radius-button)",
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: "none",
-              transition: "background 0.2s, transform 0.15s",
-              fontFamily: "var(--font-sans)",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "var(--primary-700)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "var(--primary-600)";
-            }}
-          >
-            Let's Talk
-          </Link>
-          <Link
-            href="/portal"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "12px 24px",
-              background: "transparent",
-              color: "var(--primary-600)",
-              borderRadius: "var(--radius-button)",
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: "none",
-              transition: "background 0.2s",
-              fontFamily: "var(--font-sans)",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "var(--primary-50)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "transparent";
-            }}
-          >
-            Login
-          </Link>
+          {ctaButtons?.map((btn) => (
+            <Link
+              key={btn.id}
+              href={btn.url}
+              target={btn.openInNewTab ? "_blank" : undefined}
+              rel={btn.openInNewTab ? "noopener noreferrer" : undefined}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "12px 24px",
+                background: btn.variant === 'primary' ? "var(--primary-600)" : "transparent",
+                color: btn.variant === 'primary' ? "#fff" : "var(--primary-600)",
+                borderRadius: "var(--radius-button)",
+                fontWeight: 600,
+                fontSize: 14,
+                textDecoration: "none",
+                transition: "background 0.2s, transform 0.15s",
+                fontFamily: "var(--font-sans)",
+              }}
+            >
+              {btn.text}
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -369,25 +342,30 @@ export default function Navbar({ navigation, globals }) {
             </div>
           ))}
           <div style={{ borderTop: "1px solid #334155", margin: "8px 0" }} />
-          {/* Mobile CTA - mirrors desktop CTA button */}
-          <Link
-            href="/contact-us"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "12px 24px",
-              background: "var(--primary-600)",
-              color: "#fff",
-              borderRadius: "var(--radius-button)",
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: "none",
-            }}
-          >
-            Let's Talk
-          </Link>
+          {ctaButtons?.map((btn) => (
+            <Link
+              key={btn.id}
+              href={btn.url}
+              target={btn.openInNewTab ? "_blank" : undefined}
+              rel={btn.openInNewTab ? "noopener noreferrer" : undefined}
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "12px 24px",
+                marginBottom: 8,
+                background: btn.variant === 'primary' ? "var(--primary-600)" : "transparent",
+                color: btn.variant === 'primary' ? "#fff" : "var(--primary-600)",
+                borderRadius: "var(--radius-button)",
+                fontWeight: 600,
+                fontSize: 14,
+                textDecoration: "none",
+              }}
+            >
+              {btn.text}
+            </Link>
+          ))}
         </div>
       )}
 

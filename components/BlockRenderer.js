@@ -285,9 +285,6 @@ export default function BlockRenderer({ blocks }) {
             </div>
           )}
 
-          {/* FORM BLOCK */}
-          {/* Note: Form field placeholders and button text are UI labels, not CMS content.
-              These could be made configurable via CMS globals or block_form fields if needed. */}
           {block.collection === "block_form" && (
             <div style={{ 
               maxWidth: 560, 
@@ -298,68 +295,66 @@ export default function BlockRenderer({ blocks }) {
             }}>
               {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                <input 
-                  type="text" 
-                  placeholder="Your Name" 
-                  style={{ 
-                    padding: "12px 16px", 
-                    border: "1px solid var(--card-border)", 
-                    borderRadius: "var(--radius-lg)", 
-                    fontSize: 14, 
-                    background: "var(--card-bg)", 
-                    color: "var(--foreground)",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                  }} 
-                />
-                <input 
-                  type="email" 
-                  placeholder="Your Email" 
-                  style={{ 
-                    padding: "12px 16px", 
-                    border: "1px solid var(--card-border)", 
-                    borderRadius: "var(--radius-lg)", 
-                    fontSize: 14, 
-                    background: "var(--card-bg)", 
-                    color: "var(--foreground)",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                  }} 
-                />
-                <textarea 
-                  placeholder="Your Message" 
-                  rows={4} 
-                  style={{ 
-                    padding: "12px 16px", 
-                    border: "1px solid var(--card-border)", 
-                    borderRadius: "var(--radius-lg)", 
-                    fontSize: 14, 
-                    resize: "vertical", 
-                    background: "var(--card-bg)", 
-                    color: "var(--foreground)",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                    fontFamily: "var(--font-sans)",
-                  }} 
-                />
-                <button 
-                  type="submit" 
-                  style={{ 
-                    padding: "12px 24px", 
-                    background: "var(--primary-600)", 
-                    color: "#fff", 
-                    border: "none", 
-                    borderRadius: "var(--radius-button)", 
-                    fontSize: 14, 
-                    fontWeight: 600, 
-                    cursor: "pointer",
-                    transition: "background 0.2s",
-                  }}
-                >
-                  Send Message
-                </button>
-              </form>
+              {block.form_data?.schema && (
+                <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {block.form_data.schema.map((field) => {
+                    const inputStyle = { 
+                      padding: "12px 16px", 
+                      border: "1px solid var(--card-border)", 
+                      borderRadius: "var(--radius-lg)", 
+                      fontSize: 14, 
+                      background: "var(--card-bg)", 
+                      color: "var(--foreground)",
+                      outline: "none",
+                      transition: "border-color 0.2s",
+                    };
+                    
+                    if (field.type === 'textarea') {
+                      return (
+                        <textarea 
+                          key={field.name}
+                          name={field.name}
+                          placeholder={field.placeholder || field.label}
+                          required={field.validation?.required}
+                          rows={4} 
+                          style={{ 
+                            ...inputStyle,
+                            resize: "vertical", 
+                            fontFamily: "var(--font-sans)",
+                          }} 
+                        />
+                      );
+                    }
+                    
+                    return (
+                      <input 
+                        key={field.name}
+                        type={field.type || "text"} 
+                        name={field.name}
+                        placeholder={field.placeholder || field.label}
+                        required={field.validation?.required}
+                        style={inputStyle} 
+                      />
+                    );
+                  })}
+                  <button 
+                    type="submit" 
+                    style={{ 
+                      padding: "12px 24px", 
+                      background: "var(--primary-600)", 
+                      color: "#fff", 
+                      border: "none", 
+                      borderRadius: "var(--radius-button)", 
+                      fontSize: 14, 
+                      fontWeight: 600, 
+                      cursor: "pointer",
+                      transition: "background 0.2s",
+                    }}
+                  >
+                    {block.form_data.submit_label}
+                  </button>
+                </form>
+              )}
             </div>
           )}
 
@@ -454,10 +449,6 @@ export default function BlockRenderer({ blocks }) {
             </div>
           )}
 
-          {/* CTA BLOCK */}
-          {/* Note: CTA button URL and text are hardcoded as fallbacks.
-              The block_cta collection in Directus could include button_url and button_text fields
-              to make this fully CMS-driven. */}
           {block.collection === "block_cta" && (
             <div style={{ 
               textAlign: "center", 

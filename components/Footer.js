@@ -29,11 +29,10 @@ const socialIcons = {
   ),
 };
 
-export default function Footer({ navigation, globals }) {
+export default function Footer({ navigation, globals, newsletterForm }) {
   const [isDark, setIsDark] = useState(false);
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [formValues, setFormValues] = useState({});
+  const [submitted, setSubmitted] = useState(false);
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -56,10 +55,14 @@ export default function Footer({ navigation, globals }) {
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    console.log("Newsletter subscription:", { email, firstName, lastName });
-    setEmail("");
-    setFirstName("");
-    setLastName("");
+    console.log("Newsletter subscription:", formValues);
+    setFormValues({});
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+  };
+
+  const handleFieldChange = (fieldName, value) => {
+    setFormValues(prev => ({ ...prev, [fieldName]: value }));
   };
 
   const navItems = navigation?.items || [];
@@ -236,76 +239,121 @@ export default function Footer({ navigation, globals }) {
             </div>
           </div>
 
-          {/* Newsletter Section: Form labels/placeholders are UI elements.
-              Could be made CMS-driven via globals.newsletter_heading, etc. if needed. */}
-          <div>
-            <h4 style={{
-              fontSize: 16,
-              fontWeight: 500,
-              color: isDark ? "#f1f5f9" : "#0f172a",
-              marginBottom: 20,
-              fontFamily: "var(--font-display)",
-            }}>
-              Subscribe to our <span style={{ fontStyle: "italic", color: "var(--primary-500)" }}>newsletter</span>
-            </h4>
-            <form onSubmit={handleSubscribe}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{ ...inputStyle, marginBottom: 12 }}
-                onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
-                onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
-              />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  style={inputStyle}
-                  onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
+          {newsletterForm && (
+            <div>
+              {newsletterForm.title && (
+                <h4 style={{
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: isDark ? "#f1f5f9" : "#0f172a",
+                  marginBottom: 20,
+                  fontFamily: "var(--font-display)",
+                }}
+                dangerouslySetInnerHTML={{ __html: newsletterForm.title }}
                 />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  style={inputStyle}
-                  onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
-                />
-              </div>
-              <button
-                type="submit"
-                style={{
-                  width: "100%",
-                  padding: "12px 20px",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: "#fff",
-                  background: "var(--primary-500)",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  transition: "background 0.2s, transform 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "var(--primary-600)";
-                  e.target.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "var(--primary-500)";
-                  e.target.style.transform = "translateY(0)";
-                }}
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
+              )}
+              {submitted && newsletterForm.success_message ? (
+                <p style={{ color: "var(--primary-500)", fontSize: 14 }}>{newsletterForm.success_message}</p>
+              ) : (
+                <form onSubmit={handleSubscribe}>
+                  {newsletterForm.schema?.map((field, index) => {
+                    const isHalfWidth = field.width === 'half';
+                    const isInRow = isHalfWidth && newsletterForm.schema[index + 1]?.width === 'half';
+                    const isPrevHalf = index > 0 && newsletterForm.schema[index - 1]?.width === 'half';
+                    
+                    if (isPrevHalf && isHalfWidth) return null;
+                    
+                    if (isInRow) {
+                      const nextField = newsletterForm.schema[index + 1];
+                      return (
+                        <div key={field.name} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                          <input
+                            type={field.type || "text"}
+                            name={field.name}
+                            placeholder={field.placeholder || field.label}
+                            value={formValues[field.name] || ""}
+                            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                            required={field.validation?.required}
+                            style={inputStyle}
+                            onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
+                            onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
+                          />
+                          <input
+                            type={nextField.type || "text"}
+                            name={nextField.name}
+                            placeholder={nextField.placeholder || nextField.label}
+                            value={formValues[nextField.name] || ""}
+                            onChange={(e) => handleFieldChange(nextField.name, e.target.value)}
+                            required={nextField.validation?.required}
+                            style={inputStyle}
+                            onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
+                            onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
+                          />
+                        </div>
+                      );
+                    }
+                    
+                    if (field.type === 'textarea') {
+                      return (
+                        <textarea
+                          key={field.name}
+                          name={field.name}
+                          placeholder={field.placeholder || field.label}
+                          value={formValues[field.name] || ""}
+                          onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                          required={field.validation?.required}
+                          rows={4}
+                          style={{ ...inputStyle, marginBottom: 12, resize: "vertical", fontFamily: "var(--font-sans)" }}
+                          onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
+                          onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
+                        />
+                      );
+                    }
+                    
+                    return (
+                      <input
+                        key={field.name}
+                        type={field.type || "text"}
+                        name={field.name}
+                        placeholder={field.placeholder || field.label}
+                        value={formValues[field.name] || ""}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        required={field.validation?.required}
+                        style={{ ...inputStyle, marginBottom: 12 }}
+                        onFocus={(e) => e.target.style.borderColor = "var(--primary-500)"}
+                        onBlur={(e) => e.target.style.borderColor = isDark ? "#334155" : "#e2e8f0"}
+                      />
+                    );
+                  })}
+                  <button
+                    type="submit"
+                    style={{
+                      width: "100%",
+                      padding: "12px 20px",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#fff",
+                      background: "var(--primary-500)",
+                      border: "none",
+                      borderRadius: 8,
+                      cursor: "pointer",
+                      transition: "background 0.2s, transform 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = "var(--primary-600)";
+                      e.target.style.transform = "translateY(-1px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = "var(--primary-500)";
+                      e.target.style.transform = "translateY(0)";
+                    }}
+                  >
+                    {newsletterForm.submit_label}
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
 
         <div style={{
