@@ -77,3 +77,15 @@ The site uses a block-based content system:
 - Added catch-all route `[...slug].js` for dynamic pages
 - Centralized Directus fetch logic in `lib/directus.js`
 - Pages without blocks configured in Directus show the footer only (expected behavior)
+
+## CMS as Single Source of Truth (December 14, 2024)
+- **Navbar**: Now fetches from Directus `navigation` collection (id="main")
+  - Supports dropdown menus for items with `has_children=true`
+  - Resolves page IDs to permalinks automatically
+- **Footer**: Now fetches from Directus `navigation` collection (id="footer") + `globals`
+  - Menu items from footer navigation
+  - Social links from globals.social_links
+  - Site title and tagline from globals
+- **_app.js**: Uses `App.getInitialProps` to fetch navigation and globals for all pages
+- **lib/directus.js**: Added `fetchNavigation()`, `fetchGlobals()`, `fetchAllPages()` helpers
+- **ISR**: Content changes in Directus reflect on live site without redeploy
