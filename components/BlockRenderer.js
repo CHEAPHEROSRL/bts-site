@@ -11,9 +11,36 @@ function RenderHTML({ html, style = {} }) {
 }
 
 export default function BlockRenderer({ blocks }) {
-  const sectionStyle = { marginBottom: 80, padding: "40px 20px" };
-  const titleStyle = { fontSize: 36, fontWeight: 700, marginBottom: 10, color: "var(--foreground)" };
-  const headlineStyle = { fontSize: 18, color: "var(--text-muted)", marginBottom: 30, lineHeight: 1.6 };
+  const sectionStyle = { 
+    marginBottom: 64, 
+    padding: "48px 0" 
+  };
+  
+  const titleStyle = { 
+    fontSize: 14, 
+    fontWeight: 600, 
+    marginBottom: 8, 
+    color: "var(--primary-500)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    fontFamily: "var(--font-sans)",
+  };
+  
+  const headlineStyle = { 
+    fontSize: 32, 
+    fontWeight: 700, 
+    color: "var(--foreground)", 
+    marginBottom: 16, 
+    lineHeight: 1.2,
+    fontFamily: "var(--font-display)",
+  };
+
+  const proseStyle = {
+    fontSize: 16,
+    lineHeight: 1.7,
+    color: "var(--text-muted)",
+    fontFamily: "var(--font-sans)",
+  };
 
   return (
     <>
@@ -22,12 +49,56 @@ export default function BlockRenderer({ blocks }) {
           
           {/* HERO BLOCK */}
           {block.collection === "block_hero" && (
-            <div style={{ textAlign: "center", padding: "60px 20px" }}>
-              {block.title && <h1 style={{ fontSize: 48, fontWeight: 800, marginBottom: 20, color: "var(--foreground)" }}>{block.title}</h1>}
-              <RenderHTML html={block.headline} style={{ fontSize: 20, color: "var(--text-muted)", marginBottom: 20, maxWidth: 700, margin: "0 auto 20px" }} />
-              {block.content && <p style={{ fontSize: 16, color: "var(--text-secondary)", marginBottom: 30 }}>{block.content}</p>}
+            <div style={{ 
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 48,
+              alignItems: "center",
+            }}>
+              <div style={{ gridColumn: "span 2" }}>
+                {block.title && (
+                  <p style={titleStyle}>{block.title}</p>
+                )}
+                <RenderHTML 
+                  html={block.headline} 
+                  style={{ 
+                    fontSize: 48, 
+                    fontWeight: 700, 
+                    color: "var(--foreground)", 
+                    marginBottom: 24,
+                    lineHeight: 1.1,
+                    fontFamily: "var(--font-display)",
+                  }} 
+                />
+                {block.content && (
+                  <div style={{ 
+                    fontSize: 18, 
+                    color: "var(--text-muted)", 
+                    lineHeight: 1.6,
+                    fontFamily: "var(--font-display)",
+                    marginBottom: 24,
+                  }}>
+                    {block.content}
+                  </div>
+                )}
+              </div>
               {block.image && (
-                <img src={getImageUrl(block.image)} alt={block.title || "Hero"} style={{ maxWidth: "100%", borderRadius: 12, marginTop: 30, boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }} />
+                <div style={{ 
+                  overflow: "hidden", 
+                  borderRadius: "var(--radius-card)",
+                  border: "1px solid var(--card-border)",
+                }}>
+                  <img 
+                    src={getImageUrl(block.image)} 
+                    alt={block.title || "Hero"} 
+                    style={{ 
+                      width: "100%", 
+                      height: "100%",
+                      maxHeight: 500,
+                      objectFit: "cover",
+                    }} 
+                  />
+                </div>
               )}
             </div>
           )}
@@ -35,17 +106,34 @@ export default function BlockRenderer({ blocks }) {
           {/* RICHTEXT BLOCK */}
           {block.collection === "block_richtext" && (
             <div style={{ maxWidth: 800, margin: "0 auto" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <RenderHTML html={block.content} style={{ fontSize: 17, lineHeight: 1.8, color: "var(--text-muted)" }} />
+              <RenderHTML html={block.content} style={proseStyle} />
             </div>
           )}
 
           {/* QUOTE BLOCK */}
           {block.collection === "block_quote" && (
-            <div style={{ maxWidth: 800, margin: "0 auto", padding: "40px", background: "var(--section-bg)", borderRadius: 12, borderLeft: "4px solid #667eea" }}>
-              <RenderHTML html={block.content} style={{ fontSize: 22, fontStyle: "italic", lineHeight: 1.6, color: "var(--foreground)", marginBottom: 20 }} />
-              <div style={{ fontSize: 16, color: "var(--text-muted)" }}>
+            <div style={{ 
+              maxWidth: 800, 
+              margin: "0 auto", 
+              padding: 32, 
+              background: "var(--section-bg)", 
+              borderRadius: "var(--radius-card)", 
+              borderLeft: "4px solid var(--primary-500)" 
+            }}>
+              <RenderHTML 
+                html={block.content} 
+                style={{ 
+                  fontSize: 20, 
+                  fontStyle: "italic", 
+                  lineHeight: 1.6, 
+                  color: "var(--foreground)", 
+                  marginBottom: 16,
+                  fontFamily: "var(--font-display)",
+                }} 
+              />
+              <div style={{ fontSize: 14, color: "var(--text-muted)" }}>
                 <strong>{block.title}</strong>
                 {block.subtitle && <span> — {block.subtitle}</span>}
               </div>
@@ -55,12 +143,34 @@ export default function BlockRenderer({ blocks }) {
           {/* FAQ BLOCK */}
           {block.collection === "block_faqs" && (
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
-              {block.title && <h2 style={{ ...titleStyle, textAlign: block.alignment || "left" }}>{block.title}</h2>}
+              {block.title && <p style={{ ...titleStyle, textAlign: block.alignment || "left" }}>{block.title}</p>}
               <RenderHTML html={block.headline} style={{ ...headlineStyle, textAlign: block.alignment || "left" }} />
               {block.faqs?.map((faq, i) => (
-                <div key={i} style={{ marginBottom: 25, padding: 25, background: "var(--card-bg)", borderRadius: 10, border: "1px solid var(--card-border)" }}>
-                  <h4 style={{ fontSize: 18, fontWeight: 600, marginBottom: 10, color: "var(--foreground)" }}>{faq.title}</h4>
-                  <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-muted)", margin: 0 }}>{faq.answer}</p>
+                <div key={i} style={{ 
+                  marginBottom: 16, 
+                  padding: 24, 
+                  background: "var(--card-bg)", 
+                  borderRadius: "var(--radius-card)", 
+                  border: "1px solid var(--card-border)",
+                  transition: "border-color 0.2s",
+                }}>
+                  <h4 style={{ 
+                    fontSize: 16, 
+                    fontWeight: 600, 
+                    marginBottom: 8, 
+                    color: "var(--foreground)",
+                    fontFamily: "var(--font-display)",
+                  }}>
+                    {faq.title}
+                  </h4>
+                  <p style={{ 
+                    fontSize: 14, 
+                    lineHeight: 1.7, 
+                    color: "var(--text-muted)", 
+                    margin: 0 
+                  }}>
+                    {faq.answer}
+                  </p>
                 </div>
               ))}
             </div>
@@ -69,15 +179,26 @@ export default function BlockRenderer({ blocks }) {
           {/* VIDEO BLOCK */}
           {block.collection === "block_video" && (
             <div style={{ textAlign: "center", maxWidth: 900, margin: "0 auto" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
               {block.video_url && (
                 block.video_url.includes("loom.com") ? (
-                  <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, borderRadius: 12, overflow: "hidden", boxShadow: "0 10px 40px rgba(0,0,0,0.1)" }}>
-                    <iframe src={block.video_url.replace("/share/", "/embed/")} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }} allowFullScreen />
+                  <div style={{ 
+                    position: "relative", 
+                    paddingBottom: "56.25%", 
+                    height: 0, 
+                    borderRadius: "var(--radius-card)", 
+                    overflow: "hidden",
+                    border: "1px solid var(--card-border)",
+                  }}>
+                    <iframe 
+                      src={block.video_url.replace("/share/", "/embed/")} 
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }} 
+                      allowFullScreen 
+                    />
                   </div>
                 ) : (
-                  <video controls style={{ width: "100%", borderRadius: 12 }}>
+                  <video controls style={{ width: "100%", borderRadius: "var(--radius-card)" }}>
                     <source src={block.video_url} type="video/mp4" />
                   </video>
                 )
@@ -88,15 +209,41 @@ export default function BlockRenderer({ blocks }) {
           {/* STEPS BLOCK */}
           {block.collection === "block_steps" && (
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
               {block.steps_data?.length > 0 ? (
                 block.steps_data.map((step, i) => (
-                  <div key={i} style={{ display: "flex", gap: 20, marginBottom: 30, alignItems: "flex-start" }}>
-                    {block.show_step_numbers && <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#667eea", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>}
+                  <div key={i} style={{ display: "flex", gap: 20, marginBottom: 24, alignItems: "flex-start" }}>
+                    {block.show_step_numbers && (
+                      <div style={{ 
+                        width: 36, 
+                        height: 36, 
+                        borderRadius: "var(--radius-button)", 
+                        background: "var(--primary-500)", 
+                        color: "#fff", 
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                        fontWeight: 600, 
+                        flexShrink: 0,
+                        fontSize: 14,
+                      }}>
+                        {i + 1}
+                      </div>
+                    )}
                     <div>
-                      {step.title && <h4 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "var(--foreground)" }}>{step.title}</h4>}
-                      <RenderHTML html={step.content} style={{ color: "var(--text-muted)", lineHeight: 1.6 }} />
+                      {step.title && (
+                        <h4 style={{ 
+                          fontSize: 16, 
+                          fontWeight: 600, 
+                          marginBottom: 6, 
+                          color: "var(--foreground)",
+                          fontFamily: "var(--font-display)",
+                        }}>
+                          {step.title}
+                        </h4>
+                      )}
+                      <RenderHTML html={step.content} style={{ color: "var(--text-muted)", lineHeight: 1.6, fontSize: 14 }} />
                     </div>
                   </div>
                 ))
@@ -109,11 +256,22 @@ export default function BlockRenderer({ blocks }) {
           {/* GALLERY BLOCK */}
           {block.collection === "block_gallery" && (
             <div>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 15 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
                 {block.gallery_items_data?.map((item, i) => (
-                  <img key={i} src={getImageUrl(item.directus_files_id)} alt={`Gallery ${i + 1}`} style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 10 }} />
+                  <img 
+                    key={i} 
+                    src={getImageUrl(item.directus_files_id)} 
+                    alt={`Gallery ${i + 1}`} 
+                    style={{ 
+                      width: "100%", 
+                      height: 220, 
+                      objectFit: "cover", 
+                      borderRadius: "var(--radius-card)",
+                      border: "1px solid var(--card-border)",
+                    }} 
+                  />
                 ))}
               </div>
             </div>
@@ -122,11 +280,16 @@ export default function BlockRenderer({ blocks }) {
           {/* LOGOCLOUD BLOCK */}
           {block.collection === "block_logocloud" && (
             <div style={{ textAlign: "center" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 40, justifyContent: "center", alignItems: "center", padding: "20px 0" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 48, justifyContent: "center", alignItems: "center", padding: "24px 0" }}>
                 {block.logos_data?.map((logo, i) => (
-                  <img key={i} src={getImageUrl(logo.directus_files_id)} alt={`Logo ${i + 1}`} style={{ maxWidth: 100, maxHeight: 50, objectFit: "contain", opacity: 0.7 }} />
+                  <img 
+                    key={i} 
+                    src={getImageUrl(logo.directus_files_id)} 
+                    alt={`Logo ${i + 1}`} 
+                    style={{ maxWidth: 120, maxHeight: 48, objectFit: "contain", opacity: 0.6, transition: "opacity 0.2s" }} 
+                  />
                 ))}
               </div>
             </div>
@@ -134,14 +297,76 @@ export default function BlockRenderer({ blocks }) {
 
           {/* FORM BLOCK */}
           {block.collection === "block_form" && (
-            <div style={{ maxWidth: 600, margin: "0 auto", padding: 40, background: "var(--section-bg)", borderRadius: 12 }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+            <div style={{ 
+              maxWidth: 560, 
+              margin: "0 auto", 
+              padding: 32, 
+              background: "var(--section-bg)", 
+              borderRadius: "var(--radius-panel)" 
+            }}>
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <form style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-                <input type="text" placeholder="Your Name" style={{ padding: 15, border: "1px solid var(--card-border)", borderRadius: 8, fontSize: 16, background: "var(--card-bg)", color: "var(--foreground)" }} />
-                <input type="email" placeholder="Your Email" style={{ padding: 15, border: "1px solid var(--card-border)", borderRadius: 8, fontSize: 16, background: "var(--card-bg)", color: "var(--foreground)" }} />
-                <textarea placeholder="Your Message" rows={4} style={{ padding: 15, border: "1px solid var(--card-border)", borderRadius: 8, fontSize: 16, resize: "vertical", background: "var(--card-bg)", color: "var(--foreground)" }} />
-                <button type="submit" style={{ padding: 15, background: "#667eea", color: "#fff", border: "none", borderRadius: 8, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>Send Message</button>
+              <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <input 
+                  type="text" 
+                  placeholder="Your Name" 
+                  style={{ 
+                    padding: "12px 16px", 
+                    border: "1px solid var(--card-border)", 
+                    borderRadius: "var(--radius-lg)", 
+                    fontSize: 14, 
+                    background: "var(--card-bg)", 
+                    color: "var(--foreground)",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }} 
+                />
+                <input 
+                  type="email" 
+                  placeholder="Your Email" 
+                  style={{ 
+                    padding: "12px 16px", 
+                    border: "1px solid var(--card-border)", 
+                    borderRadius: "var(--radius-lg)", 
+                    fontSize: 14, 
+                    background: "var(--card-bg)", 
+                    color: "var(--foreground)",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }} 
+                />
+                <textarea 
+                  placeholder="Your Message" 
+                  rows={4} 
+                  style={{ 
+                    padding: "12px 16px", 
+                    border: "1px solid var(--card-border)", 
+                    borderRadius: "var(--radius-lg)", 
+                    fontSize: 14, 
+                    resize: "vertical", 
+                    background: "var(--card-bg)", 
+                    color: "var(--foreground)",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                    fontFamily: "var(--font-sans)",
+                  }} 
+                />
+                <button 
+                  type="submit" 
+                  style={{ 
+                    padding: "12px 24px", 
+                    background: "var(--primary-600)", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "var(--radius-button)", 
+                    fontSize: 14, 
+                    fontWeight: 600, 
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                  }}
+                >
+                  Send Message
+                </button>
               </form>
             </div>
           )}
@@ -149,23 +374,41 @@ export default function BlockRenderer({ blocks }) {
           {/* TEAM BLOCK */}
           {block.collection === "block_team" && (
             <div style={{ textAlign: "center" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
-              <RenderHTML html={block.content} style={{ maxWidth: 700, margin: "0 auto", color: "var(--text-muted)", lineHeight: 1.7 }} />
+              <RenderHTML html={block.content} style={{ maxWidth: 700, margin: "0 auto", ...proseStyle }} />
             </div>
           )}
 
           {/* TESTIMONIALS BLOCK */}
           {block.collection === "block_testimonials" && (
-            <div style={{ textAlign: "center" }}>
-              {block.title && <h2 style={titleStyle}>{block.title}</h2>}
+            <div>
+              {block.title && <p style={titleStyle}>{block.title}</p>}
               <RenderHTML html={block.headline} style={headlineStyle} />
               {block.testimonials_data?.length > 0 ? (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 25 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
                   {block.testimonials_data.map((t, i) => (
-                    <div key={i} style={{ padding: 30, background: "var(--card-bg)", borderRadius: 12, border: "1px solid var(--card-border)", textAlign: "left" }}>
-                      <RenderHTML html={t.content || t.quote} style={{ fontStyle: "italic", marginBottom: 15, lineHeight: 1.6, color: "var(--foreground)" }} />
-                      <div><strong>{t.name}</strong>{t.title && <span style={{ color: "var(--text-muted)" }}> — {t.title}</span>}</div>
+                    <div key={i} style={{ 
+                      padding: 24, 
+                      background: "var(--card-bg)", 
+                      borderRadius: "var(--radius-card)", 
+                      border: "1px solid var(--card-border)",
+                      transition: "border-color 0.2s",
+                    }}>
+                      <RenderHTML 
+                        html={t.content || t.quote} 
+                        style={{ 
+                          fontStyle: "italic", 
+                          marginBottom: 16, 
+                          lineHeight: 1.6, 
+                          color: "var(--foreground)",
+                          fontSize: 14,
+                        }} 
+                      />
+                      <div style={{ fontSize: 14 }}>
+                        <strong style={{ color: "var(--foreground)" }}>{t.name}</strong>
+                        {t.title && <span style={{ color: "var(--text-muted)" }}> — {t.title}</span>}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -178,16 +421,42 @@ export default function BlockRenderer({ blocks }) {
           {/* COLUMNS BLOCK */}
           {block.collection === "block_columns" && (
             <div>
-              {block.title && <h2 style={{ ...titleStyle, textAlign: "center" }}>{block.title}</h2>}
+              {block.title && <p style={{ ...titleStyle, textAlign: "center" }}>{block.title}</p>}
               <RenderHTML html={block.headline} style={{ ...headlineStyle, textAlign: "center" }} />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32, marginTop: 32 }}>
                 {block.rows_data?.map((row, i) => (
-                  <div key={i} style={{ display: "flex", flexDirection: row.image_position === "right" ? "column" : "column", gap: 20 }}>
-                    {row.image && <img src={getImageUrl(row.image)} alt={row.title} style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 12 }} />}
+                  <div key={i} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                    {row.image && (
+                      <img 
+                        src={getImageUrl(row.image)} 
+                        alt={row.title} 
+                        style={{ 
+                          width: "100%", 
+                          height: 200, 
+                          objectFit: "cover", 
+                          borderRadius: "var(--radius-card)",
+                          border: "1px solid var(--card-border)",
+                        }} 
+                      />
+                    )}
                     <div>
-                      {row.title && <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 8, color: "var(--foreground)" }}>{row.title}</h3>}
-                      {row.headline && <p style={{ color: "#667eea", fontWeight: 500, marginBottom: 10 }}>{row.headline}</p>}
-                      <RenderHTML html={row.content} style={{ color: "var(--text-muted)", lineHeight: 1.7 }} />
+                      {row.title && (
+                        <h3 style={{ 
+                          fontSize: 20, 
+                          fontWeight: 600, 
+                          marginBottom: 8, 
+                          color: "var(--foreground)",
+                          fontFamily: "var(--font-display)",
+                        }}>
+                          {row.title}
+                        </h3>
+                      )}
+                      {row.headline && (
+                        <p style={{ color: "var(--primary-500)", fontWeight: 500, marginBottom: 8, fontSize: 14 }}>
+                          {row.headline}
+                        </p>
+                      )}
+                      <RenderHTML html={row.content} style={{ color: "var(--text-muted)", lineHeight: 1.7, fontSize: 14 }} />
                     </div>
                   </div>
                 ))}
@@ -197,11 +466,41 @@ export default function BlockRenderer({ blocks }) {
 
           {/* CTA BLOCK */}
           {block.collection === "block_cta" && (
-            <div style={{ textAlign: "center", padding: "80px 40px", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", borderRadius: 20, color: "#fff" }}>
-              {block.title && <h2 style={{ fontSize: 40, fontWeight: 700, marginBottom: 15 }}>{block.title}</h2>}
-              <RenderHTML html={block.headline} style={{ fontSize: 20, marginBottom: 20, opacity: 0.9 }} />
-              <RenderHTML html={block.content} style={{ maxWidth: 600, margin: "0 auto 30px", opacity: 0.85, lineHeight: 1.7 }} />
-              <a href="/contact-us" style={{ display: "inline-block", padding: "16px 40px", background: "#fff", color: "#667eea", borderRadius: 8, fontWeight: 700, fontSize: 18, textDecoration: "none" }}>Get Started</a>
+            <div style={{ 
+              textAlign: "center", 
+              padding: "64px 40px", 
+              background: "var(--primary-600)", 
+              borderRadius: "var(--radius-panel)", 
+              color: "#fff" 
+            }}>
+              {block.title && (
+                <h2 style={{ 
+                  fontSize: 36, 
+                  fontWeight: 700, 
+                  marginBottom: 12,
+                  fontFamily: "var(--font-display)",
+                }}>
+                  {block.title}
+                </h2>
+              )}
+              <RenderHTML html={block.headline} style={{ fontSize: 18, marginBottom: 16, opacity: 0.9 }} />
+              <RenderHTML html={block.content} style={{ maxWidth: 560, margin: "0 auto 24px", opacity: 0.85, lineHeight: 1.7, fontSize: 16 }} />
+              <a 
+                href="/contact-us" 
+                style={{ 
+                  display: "inline-block", 
+                  padding: "14px 32px", 
+                  background: "#fff", 
+                  color: "var(--primary-600)", 
+                  borderRadius: "var(--radius-button)", 
+                  fontWeight: 600, 
+                  fontSize: 15, 
+                  textDecoration: "none",
+                  transition: "transform 0.15s",
+                }}
+              >
+                Get Started
+              </a>
             </div>
           )}
 
