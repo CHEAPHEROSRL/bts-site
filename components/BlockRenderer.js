@@ -470,7 +470,7 @@ export default function BlockRenderer({ blocks }) {
               <RenderHTML html={block.headline} style={{ fontSize: 18, marginBottom: 16, opacity: 0.9 }} />
               <RenderHTML html={block.content} style={{ maxWidth: 560, margin: "0 auto 24px", opacity: 0.85, lineHeight: 1.7, fontSize: 16 }} />
               <a 
-                href="/contact-us" 
+                href={block.button_url || "/contact-us"} 
                 style={{ 
                   display: "inline-block", 
                   padding: "14px 32px", 
@@ -483,7 +483,7 @@ export default function BlockRenderer({ blocks }) {
                   transition: "transform 0.15s",
                 }}
               >
-                Get Started
+                {block.button_text || block.title || "Get Started"}
               </a>
             </div>
           )}

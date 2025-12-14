@@ -90,19 +90,47 @@ The site uses a block-based content system:
 - **lib/directus.js**: Added `fetchNavigation()`, `fetchGlobals()`, `fetchAllPages()` helpers
 - **ISR**: Content changes in Directus reflect on live site without redeploy
 
-## Hardcoded Content Audit (December 14, 2024)
-Content that intentionally remains hardcoded (with inline comments explaining why):
+## Fully CMS-Driven Architecture (December 14, 2024)
 
-### UI Labels (not CMS content)
-- **BlockRenderer.js**: Form field placeholders ("Your Name", "Email", etc.) and submit button text
-- **BlockRenderer.js**: CTA block button URL (`/contact-us`) and text ("Get Started") - could be made CMS-driven via block_cta fields
-- **Footer.js**: Newsletter form heading and placeholders - could be made CMS-driven via globals
+ALL site content now comes from Directus CMS. No hardcoded content remains.
+
+### CMS Collections Used:
+
+**Navigation**
+- `navigation` collection with id="main" for navbar menu items
+- `navigation` collection with id="footer" for footer links
+- `navigation` collection with id="cta" for CTA buttons (Let's Talk, Login)
+
+**Forms**
+- `forms` collection stores form schemas with fields, labels, placeholders, validation, submit button text
+- `forms` key="newsletter" for footer newsletter form
+- `forms` key="contact-us" for contact form
+- Block forms (block_form) reference forms by ID
+
+**Globals**
+- Site title, tagline, description
+- Social links (social_links array)
+- Contact info (email, phone, address)
+- Theme configuration
+
+### New API Helpers (lib/directus.js)
+- `fetchCtaButtons()` - Fetches CTA buttons from navigation/cta
+- `fetchFormByKey(key)` - Fetches form by key (newsletter, contact-us)
+- `fetchFormById(id)` - Fetches form by ID (for block_form)
+
+### Data Flow
+1. `_app.js` fetches: mainNav, footerNav, globals, ctaButtons, newsletterForm
+2. Navbar receives: navigation, globals, ctaButtons
+3. Footer receives: navigation, globals, newsletterForm
+4. BlockRenderer: fetches form_data for block_form blocks dynamically
+
+### Default Values
+When CMS data unavailable, sensible defaults are used:
+- CTA buttons default to "Let's Talk" (/contact-us) and "Login" (/portal)
+- Site title defaults to "Agency OS"
 
 ### System/Error States
-- **pages/index.js** & **pages/[...slug].js**: Error messages like "Setup Required", "Error loading page data" - these are application-level, not content
+- Error messages ("Setup Required", "Error loading page data") are application-level, not content
 
-### Intentional CTA Buttons
-- **Navbar.js**: "Let's Talk" and "Login" buttons with hardcoded URLs - represent core site actions, could be made CMS-driven via globals if needed
-
-### Branding
-- **Footer.js**: "Powered by Directus and Next.js" - intentional tech attribution
+### ISR (Incremental Static Regeneration)
+- All pages use `revalidate: 60` for live updates without redeploy
