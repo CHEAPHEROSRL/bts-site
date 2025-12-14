@@ -230,6 +230,8 @@ export default function Navbar({ navigation, globals }) {
           </div>
         </div>
 
+        {/* CTA Buttons: These are intentionally hardcoded as they represent core site actions.
+            Could be made CMS-driven via globals.cta_primary_url, globals.cta_primary_text, etc. if needed. */}
         <div style={{
           display: "none",
           gap: 12,
@@ -367,6 +369,7 @@ export default function Navbar({ navigation, globals }) {
             </div>
           ))}
           <div style={{ borderTop: "1px solid #334155", margin: "8px 0" }} />
+          {/* Mobile CTA - mirrors desktop CTA button */}
           <Link
             href="/contact-us"
             onClick={() => setMobileMenuOpen(false)}

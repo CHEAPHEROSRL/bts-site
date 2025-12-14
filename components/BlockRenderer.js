@@ -239,9 +239,7 @@ export default function BlockRenderer({ blocks }) {
                     </div>
                   </div>
                 ))
-              ) : (
-                <p style={{ color: "var(--text-secondary)", fontStyle: "italic" }}>Process steps coming soon...</p>
-              )}
+              ) : null}
             </div>
           )}
 
@@ -288,6 +286,8 @@ export default function BlockRenderer({ blocks }) {
           )}
 
           {/* FORM BLOCK */}
+          {/* Note: Form field placeholders and button text are UI labels, not CMS content.
+              These could be made configurable via CMS globals or block_form fields if needed. */}
           {block.collection === "block_form" && (
             <div style={{ 
               maxWidth: 560, 
@@ -404,9 +404,7 @@ export default function BlockRenderer({ blocks }) {
                     </div>
                   ))}
                 </div>
-              ) : (
-                <p style={{ color: "var(--text-secondary)", fontStyle: "italic" }}>Testimonials coming soon...</p>
-              )}
+              ) : null}
             </div>
           )}
 
@@ -457,6 +455,9 @@ export default function BlockRenderer({ blocks }) {
           )}
 
           {/* CTA BLOCK */}
+          {/* Note: CTA button URL and text are hardcoded as fallbacks.
+              The block_cta collection in Directus could include button_url and button_text fields
+              to make this fully CMS-driven. */}
           {block.collection === "block_cta" && (
             <div style={{ 
               textAlign: "center", 

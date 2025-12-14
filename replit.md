@@ -89,3 +89,20 @@ The site uses a block-based content system:
 - **_app.js**: Uses `App.getInitialProps` to fetch navigation and globals for all pages
 - **lib/directus.js**: Added `fetchNavigation()`, `fetchGlobals()`, `fetchAllPages()` helpers
 - **ISR**: Content changes in Directus reflect on live site without redeploy
+
+## Hardcoded Content Audit (December 14, 2024)
+Content that intentionally remains hardcoded (with inline comments explaining why):
+
+### UI Labels (not CMS content)
+- **BlockRenderer.js**: Form field placeholders ("Your Name", "Email", etc.) and submit button text
+- **BlockRenderer.js**: CTA block button URL (`/contact-us`) and text ("Get Started") - could be made CMS-driven via block_cta fields
+- **Footer.js**: Newsletter form heading and placeholders - could be made CMS-driven via globals
+
+### System/Error States
+- **pages/index.js** & **pages/[...slug].js**: Error messages like "Setup Required", "Error loading page data" - these are application-level, not content
+
+### Intentional CTA Buttons
+- **Navbar.js**: "Let's Talk" and "Login" buttons with hardcoded URLs - represent core site actions, could be made CMS-driven via globals if needed
+
+### Branding
+- **Footer.js**: "Powered by Directus and Next.js" - intentional tech attribution

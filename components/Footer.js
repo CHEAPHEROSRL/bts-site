@@ -236,6 +236,8 @@ export default function Footer({ navigation, globals }) {
             </div>
           </div>
 
+          {/* Newsletter Section: Form labels/placeholders are UI elements.
+              Could be made CMS-driven via globals.newsletter_heading, etc. if needed. */}
           <div>
             <h4 style={{
               fontSize: 16,

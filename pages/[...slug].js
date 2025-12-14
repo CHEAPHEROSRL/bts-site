@@ -51,6 +51,8 @@ export async function getStaticProps({ params }) {
 }
 
 export default function DynamicPage({ page, blocks, missingConfig, error }) {
+  /* System/error states below use hardcoded messages - these are intentional
+     as they represent application-level errors, not CMS content */
   if (missingConfig) {
     return (
       <main style={{ fontFamily: "Inter, Arial, sans-serif", color: "#fff", padding: 60, background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
