@@ -112,9 +112,27 @@ ALL site content now comes from Directus CMS. No hardcoded content remains.
 
 **Globals**
 - Site title, tagline, description
-- Social links (social_links array)
+- Social links (social_links array) - fetched with `fields=*,social_links.*`
 - Contact info (email, phone, address)
 - Theme configuration
+- **primary_color** - Hex color (e.g., `#64748b`) that dynamically generates the entire color palette
+
+## Dynamic Theming (December 15, 2024)
+
+Theme colors are now fetched from Directus and applied dynamically:
+
+### How It Works
+1. `fetchGlobals()` retrieves `primary_color` from Directus globals
+2. `generateColorScale()` in `_app.js` creates a full 50-900 color palette from the single hex color
+3. CSS variables (`--primary-50` through `--primary-900`) are injected globally, overriding the defaults in `globals.css`
+
+### Setting Your Theme Color in Directus
+- Go to AgencyOS Settings > Globals
+- Set `primary_color` field to your desired hex color (e.g., `#64748b` for grey)
+- The site will automatically update within 60 seconds (ISR)
+
+### Fallback Behavior
+If no `primary_color` is set in Directus, the site uses the default violet palette defined in `styles/globals.css`
 
 ### New API Helpers (lib/directus.js)
 - `fetchCtaButtons()` - Fetches CTA buttons from navigation/cta
