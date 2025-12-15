@@ -112,10 +112,7 @@ export default function BlockRenderer({ blocks }) {
                 }
                 @media (min-width: 768px) {
                   .hero-block {
-                    grid-template-columns: 2fr 1fr;
-                  }
-                  .hero-image {
-                    margin-right: -64px;
+                    grid-template-columns: 1fr 1fr;
                   }
                 }
               `}</style>
