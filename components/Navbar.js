@@ -168,7 +168,7 @@ export default function Navbar({ navigation, globals, ctaButtons }) {
                               width: 48,
                               height: 48,
                               borderRadius: 10,
-                              background: "#6366f1",
+                              background: "var(--primary-500)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
